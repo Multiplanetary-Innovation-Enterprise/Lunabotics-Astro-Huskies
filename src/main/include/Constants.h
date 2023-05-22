@@ -19,3 +19,55 @@ namespace OperatorConstants {
 constexpr int kDriverControllerPort = 0;
 
 }  // namespace OperatorConstants
+
+namespace CAMConstants {
+    //Chassis CAN IDs
+    constexpr int driveMotor1ID = 13;
+    constexpr int driveMotor2ID = 21;
+    constexpr int driveMotor3ID = 20;
+    constexpr int driveMotor4ID = 15;
+}
+
+namespace HOPConstants {
+    //Hopper CAN IDs
+    constexpr int beltMotorID = 14; 
+    constexpr int flipMotorID = 22; 
+
+    //Motor Speeds
+    constexpr double beltVelocity = 0.5;
+    constexpr double flipVelocity = 1;
+
+    //Flipper Rotation Positions
+    constexpr int stowPosition = 0;         // NOT FINALISED
+    constexpr int dumpPosition = 90;        // NOT FINALISED
+    constexpr int tumblePosition = 180;     // NOT FINALISED
+}
+
+namespace EXCConstants {
+    //DIO ports
+    static const int linearActuatorID_dir = 1;
+    static const int linearActuatorID2_dir = 3;
+    static const int linearActuatorID_speed = 2;
+    static const int linearActuatorID_speed2 = 4;
+
+    //CAM IDs
+    constexpr int extendMotor1ID = 24;
+    constexpr int extendMotor2ID = 25;
+    constexpr int bucketSpinMotorID = 23;
+
+    //Motor Speeds
+    static const double extendVelocity = 1;
+    static const double retractVelocity = -1;
+
+    static const double linearActuatorForwardVelocity = 1;
+    static const double linearActuatorRetractVelocity = -1;
+    static const double linearActuatorForwardValue = 1;
+    static const double linearActuatorRetractValue = -1;
+
+    static const double bucketSpinMotorSpeed = 0.1;
+
+    //Excavator Extension Positions
+    constexpr int maxRetraction = 0;
+    constexpr int maxExtension = 100;       //NOT FINALIZED
+}
+

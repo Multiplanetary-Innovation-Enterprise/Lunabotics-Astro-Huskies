@@ -27,7 +27,7 @@ class EXC : public frc2::SubsystemBase {
   /**
    * Function will return the velocity that the excavator is being raised or lowered.
    */
-  double getDigVelocity();
+  double getExtendVelocity();
   
   /**
    * Function will return the speed of the bucket motor.
@@ -37,7 +37,9 @@ class EXC : public frc2::SubsystemBase {
   /**
    * Function will set the velocity that the excavator is being raised or lowered by.
    */
-  void setDigVelocity(double speed);
+  void setExtendVelocity(double speed);
+  void setExtendPosition(int position);
+  void setRetractPosition(int position);
   
   /**
    * Function will set the speed of the bucket motor.
@@ -62,8 +64,8 @@ class EXC : public frc2::SubsystemBase {
 
  private:
   // Components (e.g. motor controllers and sensors) 
-  rev::CANSparkMax  m_digMotor1; 
-  rev::CANSparkMax  m_digMotor2; 
+  rev::CANSparkMax  m_extendMotor1; 
+  rev::CANSparkMax  m_extendMotor2; 
   rev::CANSparkMax  m_bucketSpinMotor; 
  
   frc::Servo  m_linearActuatordir1;
@@ -71,11 +73,11 @@ class EXC : public frc2::SubsystemBase {
   frc::Servo  m_linearActuatorSpeed1;
   frc::Servo  m_linearActuatorSpeed2;
  
-  rev::SparkMaxRelativeEncoder  m_digEncoder1;
-  rev::SparkMaxRelativeEncoder  m_digEncoder2; 
+  rev::SparkMaxRelativeEncoder  m_extendEncoder1;
+  rev::SparkMaxRelativeEncoder  m_extendEncoder2; 
   rev::SparkMaxRelativeEncoder  m_bucketEncoder; 
 }
-
+/*
 class EXC_Stow
     : public frc2::CommandHelper<frc2::CommandBase, EXC_Stow> {
  public:
@@ -115,3 +117,4 @@ class EXC_Deploy
 
   bool IsFinished() override;
 };
+*/

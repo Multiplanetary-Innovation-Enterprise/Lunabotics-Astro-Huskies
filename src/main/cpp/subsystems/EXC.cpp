@@ -6,7 +6,11 @@
 #include "Constants.h"
 #include <frc/DigitalOutput.h>
 #include "RobotContainer.h"
+time_t time0;
+time_t time1;
 
+int state = 0;
+int isAuto = 0;
 EXC::EXC(): 
     m_extendMotor1{EXCConstants::extendMotor1ID, rev::CANSparkMax::MotorType::kBrushless},
     m_extendMotor2{EXCConstants::extendMotor2ID, rev::CANSparkMax::MotorType::kBrushless},
@@ -40,7 +44,7 @@ int EXC::getExcavatorDepth() {
 int EXC::getLinearActuatorPosition() {
     if(m_linearActuatorPosition1.GetValue() <= m_linearActuatorPosition2.GetValue()) {
         return m_linearActuatorPosition1.GetValue(); 
-    } else { return m_linearActuatorPosition2.GetValue();}
+    } else { m_linearActuatorPosition2.GetValue();}
 }
 
 double EXC::getExtendVelocity() {
@@ -96,8 +100,12 @@ void EXC::deployExcavator() {
     EXC::setLinearActuatorspeed(EXCConstants::linearActuatorVelocity);
 }
 
+void EXC::autoEXCState(int autoState) {
+    isAuto = autoState;
+}
+
 void EXC::autoExcavator() {
-    if(EXCConstants::isAuto == 1){
+    if(isAuto == 1){
         //state = 0 ->initialize
         //state = 1 ->deploy
         //state = 2 ->extend & dig
@@ -106,59 +114,59 @@ void EXC::autoExcavator() {
         //state = 5 ->stow
         //state = 6 ->shutdown
 
-        if(EXCConstants::state == 0){     
-            EXCConstants::state = 1;
-            time(&EXCConstants::time0); //GetCurrentTime
+        if(state == 0){     
+            state = 1;
+            time(&time0); //GetCurrentTime
         }
-        else if (EXCConstants::state == 1){
+        else if (state == 1){
             EXC::deployExcavator();
             if(EXC::getLinearActuatorPosition() >= EXCConstants::linearActuatorMax) {
-                EXCConstants::state = 2;
+                state = 2;
                 EXC::setLinearActuatorspeed(0);
             }
         }
-        else if(EXCConstants::state == 2){
+        else if(state == 2){
             EXC::setExtendVelocity(EXCConstants::extendVelocity);
             EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
             if(EXC::getExcavatorDepth() > EXCConstants::maxExtension){
-                EXCConstants::state = 3;
+                state = 3;
                 EXC::setExtendVelocity(0);
             }
         }
-        else if(EXCConstants::state == 3){
+        else if(state == 3){
             EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
-            time(&EXCConstants::time1); //GetTimePassed
-            if(EXCConstants::time1 - EXCConstants::time0 > 300000){
-                EXCConstants::state = 4;
+            time(&time1); //GetTimePassed
+            if(time1 - time0 > 300000){
+                state = 4;
             }
         }
-        else if(EXCConstants::state == 4){
+        else if(state == 4){
             EXC::setExtendVelocity(EXCConstants::retractVelocity);
             if(EXC::getExcavatorDepth() < 5){
-                EXCConstants::state = 5;
+                state = 5;
                 EXC::setBucketSpeed(0);
             }
         }
-        else if(EXCConstants::state == 5){
+        else if(state == 5){
             EXC::stowExcavator();
             if(EXC::getLinearActuatorPosition() <= EXCConstants::linearActuatorMin) {
-                EXCConstants::state = 6;
+                state = 6;
                 EXC::setLinearActuatorspeed(0);
             }  
         }
-        else if(EXCConstants::state == 6){
+        else if(state == 6){
             EXC::setBucketSpeed(0);
             EXC::setExtendVelocity(0);
             EXC::setLinearActuatorspeed(0);
-            EXCConstants::isAuto = 0;
-            EXCConstants::state = 0;
+            isAuto = 0;
+            state = 0;
         }
         
     }
-    else if(EXCConstants::isAuto == 2) {
+    else if(isAuto == 2) {
         EXC::setBucketSpeed(0);
         EXC::setExtendVelocity(0);
         EXC::setLinearActuatorspeed(0);
-        EXCConstants::isAuto = 0;
+        isAuto = 0;
     }
 }

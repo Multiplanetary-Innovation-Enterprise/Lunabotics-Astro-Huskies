@@ -79,10 +79,5 @@ namespace EXCConstants {
     constexpr int linearActuatorMin = 0;
 
     //Timers
-    time_t time0;
-    time_t time1;
-
-    int state = 0;
-    int isAuto = 0;
     }
 

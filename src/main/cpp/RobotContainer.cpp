@@ -16,9 +16,9 @@ RobotContainer::RobotContainer() {
   ConfigureBindings();
 
     m_driverControllerCoDriver.RightTrigger()
-    .OnTrue(frc2::cmd::RunOnce([this] {EXCConstants::isAuto = 1;}));
+    .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.autoEXCState(1);}));
     m_driverControllerCoDriver.RightBumper()
-      .OnTrue(frc2::cmd::RunOnce([this] {EXCConstants::isAuto = 2;}));
+      .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.autoEXCState(2);}));
     
     m_EXC.autoExcavator();
 

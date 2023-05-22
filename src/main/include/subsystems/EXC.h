@@ -57,6 +57,7 @@ class EXC : public frc2::SubsystemBase {
   void stowExcavator();
   void deployExcavator();
   void autoExcavator();
+  void autoEXCState(int autoState);
   
   int getLinearActuatorPosition();
 

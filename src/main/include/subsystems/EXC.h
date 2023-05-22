@@ -10,6 +10,7 @@
 #include <frc/Servo.h>
 #include <frc/DigitalInput.h>
 #include <frc/DigitalOutput.h>
+#include <frc/AnalogInput.h>
 
 class EXC : public frc2::SubsystemBase {
  public:
@@ -55,7 +56,10 @@ class EXC : public frc2::SubsystemBase {
 
   void stowExcavator();
   void deployExcavator();
+  void autoExcavator();
   
+  int getLinearActuatorPosition();
+
  private:
   // Components (e.g. motor controllers and sensors) 
   rev::CANSparkMax  m_extendMotor1; 
@@ -66,6 +70,9 @@ class EXC : public frc2::SubsystemBase {
   frc::DigitalOutput  m_linearActuatordir2;
   frc::DigitalOutput  m_linearActuatorSpeed1;
   frc::DigitalOutput  m_linearActuatorSpeed2;
+
+  frc::AnalogInput m_linearActuatorPosition1 {0};
+  frc::AnalogInput m_linearActuatorPosition2 {1};
 
   rev::SparkMaxRelativeEncoder  m_extendEncoder1;
   rev::SparkMaxRelativeEncoder  m_extendEncoder2; 

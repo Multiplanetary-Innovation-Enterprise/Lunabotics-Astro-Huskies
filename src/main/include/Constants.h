@@ -3,6 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
+#include <time.h>
+#include <iostream>
+
 
 /**
  * The Constants header provides a convenient place for teams to hold robot-wide
@@ -50,6 +53,10 @@ namespace EXCConstants {
     static const int linearActuatorID_speed = 2;
     static const int linearActuatorID_speed2 = 4;
 
+    //Analog ports
+    //static const int linearActuatorID1Pot = 1;
+    //static const int linearActuatorID2Pot = 2;
+    
     //CAM IDs
     constexpr int extendMotor1ID = 24;
     constexpr int extendMotor2ID = 25;
@@ -68,5 +75,14 @@ namespace EXCConstants {
     //Excavator Extension Positions
     constexpr int maxRetraction = 0;
     constexpr int maxExtension = 100;       //NOT FINALIZED
-}
+    constexpr int linearActuatorMax =128;
+    constexpr int linearActuatorMin = 0;
+
+    //Timers
+    time_t time0;
+    time_t time1;
+
+    int state = 0;
+    int isAuto = 0;
+    }
 

@@ -15,6 +15,14 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureBindings();
 
+    m_driverControllerCoDriver.RightTrigger()
+    .OnTrue(frc2::cmd::RunOnce([this] {EXCConstants::isAuto = 1;}));
+    m_driverControllerCoDriver.RightBumper()
+      .OnTrue(frc2::cmd::RunOnce([this] {EXCConstants::isAuto = 2;}));
+    
+    m_EXC.autoExcavator();
+
+
     m_CAM.SetDefaultCommand(frc2::cmd::Run(
       [this] {
         m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(),
@@ -63,6 +71,7 @@ void RobotContainer::ConfigureBindings() {
 
   m_driverControllerDriver.RightStick().OnTrue(frc2::cmd::RunOnce([this]
      {m_CAM.setVelocity(0, 0.1);}, {&m_CAM}));
+
 }
 
   // Schedule `ExampleMethodCommand` when the Xbox controller's B button is

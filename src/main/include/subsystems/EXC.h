@@ -9,6 +9,7 @@
 #include <rev/CANSparkMax.h>
 #include <frc/Servo.h>
 #include <frc/DigitalInput.h>
+#include <frc/DigitalOutput.h>
 
 class EXC : public frc2::SubsystemBase {
  public:
@@ -52,69 +53,20 @@ class EXC : public frc2::SubsystemBase {
   void setLinearActuatordirection(double direction);
   void setLinearActuatorspeed(double speed);
 
-  /**
-   * Function returns true or false if the excavator is extended or not.
-   
-  bool isExtended();
+  void stowExcavator();
+  void deployExcavator();
   
-  
-   * Function returns true or false if the excavator is retracted or not.
-    bool isRetracted();
-    */
-
  private:
   // Components (e.g. motor controllers and sensors) 
   rev::CANSparkMax  m_extendMotor1; 
   rev::CANSparkMax  m_extendMotor2; 
   rev::CANSparkMax  m_bucketSpinMotor; 
  
-  frc::Servo  m_linearActuatordir1;
-  frc::Servo  m_linearActuatordir2;
-  frc::Servo  m_linearActuatorSpeed1;
-  frc::Servo  m_linearActuatorSpeed2;
- 
+  frc::DigitalOutput  m_linearActuatordir1;
+  frc::DigitalOutput  m_linearActuatordir2;
+  frc::DigitalOutput  m_linearActuatorSpeed1;
+  frc::DigitalOutput  m_linearActuatorSpeed2;
+
   rev::SparkMaxRelativeEncoder  m_extendEncoder1;
   rev::SparkMaxRelativeEncoder  m_extendEncoder2; 
-  rev::SparkMaxRelativeEncoder  m_bucketEncoder; 
-}
-/*
-class EXC_Stow
-    : public frc2::CommandHelper<frc2::CommandBase, EXC_Stow> {
- public:
-  EXC_Stow();
-
-  void Initialize() override;
-
-  void Execute() override;
-
-  void End(bool interrupted) override;
-
-  bool IsFinished() override;
-};
-class EXC_Dig
-    : public frc2::CommandHelper<frc2::CommandBase, EXC_Dig> {
- public:
-  EXC_Dig();
-
-  void Initialize() override;
-
-  void Execute() override;
-
-  void End(bool interrupted) override;
-
-  bool IsFinished() override;
-};
-class EXC_Deploy
-    : public frc2::CommandHelper<frc2::CommandBase, EXC_Deploy> {
- public:
-  EXC_Deploy();
-
-  void Initialize() override;
-
-  void Execute() override;
-
-  void End(bool interrupted) override;
-
-  bool IsFinished() override;
-};
-*/
+  rev::SparkMaxRelativeEncoder  m_bucketEncoder; };

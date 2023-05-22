@@ -18,13 +18,7 @@ class CAM : public frc2::SubsystemBase {
    */
   void Periodic() override;
 
-  void CAM::setVelocity(double leftVelocity, double rightVelocity) {
-    m_driveMotor1.Set(leftVelocity);
-    m_driveMotor3.Set(leftVelocity);
-
-    m_driveMotor2.Set(rightVelocity);
-    m_driveMotor4.Set(rightVelocity);
-}
+  void setVelocity(double leftVelocity, double rightVelocity);
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be

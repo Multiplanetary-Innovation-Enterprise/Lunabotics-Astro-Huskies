@@ -23,4 +23,10 @@ void CAM::Periodic() {}
 // The function doesn't run whenever we touch the joystick
 // The function continullay runs and reads the joystick value
 
-CAM::setVelocity(leftVelocity, rightVelocity)
+  void CAM::setVelocity(double leftVelocity, double rightVelocity) {
+    m_driveMotor1.Set(leftVelocity);
+    m_driveMotor3.Set(leftVelocity);
+
+    m_driveMotor2.Set(rightVelocity);
+    m_driveMotor4.Set(rightVelocity);
+}

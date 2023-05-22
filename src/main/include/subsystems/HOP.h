@@ -32,6 +32,8 @@ class HOP : public frc2::SubsystemBase {
 
   int GetFlipPosition();
 
+  void SetFlipVelocity(double flipVelocity);
+
 
  private:
   // Components (e.g. motor controllers and sensors) should generally be
@@ -42,45 +44,3 @@ class HOP : public frc2::SubsystemBase {
   rev::CANSparkMax              m_flipMotor;
   rev::SparkMaxRelativeEncoder  m_flipEncoder;
 };
-
-/*
-class HOP_Dump
-    : public frc2::CommandHelper<frc2::CommandBase, HOP_Dump> {
- public:
-  HOP_Dump();
-
-  void Initialize() override;
-
-  void Execute() override;
-
-  void End(bool interrupted) override;
-
-  bool IsFinished() override;
-};
-class HOP_Stow
-    : public frc2::CommandHelper<frc2::CommandBase, HOP_Stow> {
- public:
-  HOP_Stow();
-
-  void Initialize() override;
-
-  void Execute() override;
-
-  void End(bool interrupted) override;
-
-  bool IsFinished() override;
-};
-class HOP_Tumble
-    : public frc2::CommandHelper<frc2::CommandBase, HOP_Tumble> {
- public:
-  HOP_Tumble();
-
-  void Initialize() override;
-
-  void Execute() override;
-
-  void End(bool interrupted) override;
-
-  bool IsFinished() override;
-}; 
-*/

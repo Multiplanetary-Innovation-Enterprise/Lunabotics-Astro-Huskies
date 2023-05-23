@@ -33,8 +33,6 @@ class HOP : public frc2::SubsystemBase {
   void setFlipDump();
   void setFlipTumble();
 
-  int GetFlipPosition();
-
   void SetFlipVelocity(double flipVelocity);
 
 

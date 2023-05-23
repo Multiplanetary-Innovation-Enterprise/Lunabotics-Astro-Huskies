@@ -60,19 +60,28 @@ double EXC::getBucketSpeed() {
 }
 
 void EXC::setExtendVelocity(double speed) {
-    if(EXC::getExcavatorDepth() > EXCConstants::maxRetraction && speed < 0){
         m_extendMotor1.Set(speed);
         m_extendMotor2.Set(speed);
-    }
-    else if(EXC::getExcavatorDepth() < EXCConstants::maxExtension  && speed > 0){
-        m_extendMotor1.Set(speed);
-        m_extendMotor2.Set(speed);
-    }
-    else {
-        m_extendMotor1.Set(0);
-        m_extendMotor2.Set(0);
-    }
-    
+        if(speed > 0){
+            if(m_extendEncoder1.GetPosition() > m_extendEncoder2.GetPosition()){
+                m_extendMotor1.Set(speed*0.9);
+                m_extendMotor2.Set(speed);
+            }
+            else if(m_extendEncoder1.GetPosition() < m_extendEncoder2.GetPosition()){
+                m_extendMotor1.Set(speed);
+                m_extendMotor2.Set(speed*0.9);
+            }
+        }   
+        else if(speed < 0){
+            if(m_extendEncoder1.GetPosition() < m_extendEncoder2.GetPosition()){
+                m_extendMotor1.Set(speed*0.9);
+                m_extendMotor2.Set(speed);
+            }
+            else if(m_extendEncoder1.GetPosition() > m_extendEncoder2.GetPosition()){
+                m_extendMotor1.Set(speed);
+                m_extendMotor2.Set(speed*0.9);
+            }
+        } 
 }
 
 void EXC::setExtendPosition(int position) {
@@ -114,14 +123,14 @@ void EXC::stowExcavator() {
 }
 
 void EXC::deployExcavator() {
-    if(EXC::getLinearActuatorPosition() < EXCConstants::linearActuatorMax){
+    //if(EXC::getLinearActuatorPosition() < EXCConstants::linearActuatorMax){
         EXC::setLinearActuatordirection(EXCConstants::linearActuatorForwardValue);
         EXC::setLinearActuatorspeed(EXCConstants::linearActuatorVelocity);
-    }
+    /*}
     else {
         EXC::setLinearActuatordirection(0);
         EXC::setLinearActuatorspeed(0);
-    }
+    }*/
     
     
 }

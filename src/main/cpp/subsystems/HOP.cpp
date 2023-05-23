@@ -18,10 +18,10 @@ void HOP::Periodic() {
 }
 
 void HOP::SetFlipVelocity(double flipVelocity) {
-    if(HOP::GetFlipPosition() > HOPConstants::stowPosition && flipVelocity > 0){
+    if(m_flipEncoder.GetPosition() < HOPConstants::stowPosition && flipVelocity > 0){
         m_flipMotor.Set(flipVelocity);
     }
-    else if(HOP::GetFlipPosition() < HOPConstants::tumblePosition && flipVelocity < 0){
+    else if(m_flipEncoder.GetPosition() > HOPConstants::tumblePosition && flipVelocity < 0){
         m_flipMotor.Set(flipVelocity);
     }
     else{

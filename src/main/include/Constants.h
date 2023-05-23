@@ -38,8 +38,8 @@ namespace HOPConstants {
     constexpr int flipMotorID = 14; 
 
     //Motor Speeds
-    constexpr double beltVelocity = 0.5;
-    constexpr double flipVelocity = 0.3;
+    constexpr double beltVelocity = 0.4;
+    constexpr double flipVelocity = 0.2;
 
     //Flipper Rotation Positions
     constexpr int stowPosition = 0;         // NOT FINALISED
@@ -71,7 +71,7 @@ namespace EXCConstants {
     static const double linearActuatorForwardValue = 0.5;
     static const double linearActuatorRetractValue = 0;
 
-    static const double bucketSpinMotorSpeed = -0.3;
+    static const double bucketSpinMotorSpeed = -0.26;
 
     //Excavator Extension Positions
     constexpr int maxRetraction = -5;

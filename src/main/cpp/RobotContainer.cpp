@@ -26,7 +26,7 @@ RobotContainer::RobotContainer() {
     m_CAM.SetDefaultCommand(frc2::cmd::Run(
       [this] {
         m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(),
-                            -m_driverControllerDriver.GetRightY());
+                            m_driverControllerDriver.GetRightY());
       },
       {&m_CAM}));
 }

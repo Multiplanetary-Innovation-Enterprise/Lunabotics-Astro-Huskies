@@ -61,6 +61,9 @@ void EXC::extendRightScrew(double speed){
     m_extendMotor1.Set(speed*0.9);
 }
 void EXC::setExtendVelocity(double speed) {
+    m_extendMotor1.Set(speed);
+    m_extendMotor2.Set(speed);
+    /*
         if(speed > 0){
             if(m_extendEncoder1.GetPosition() > m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed*0.8);
@@ -84,7 +87,7 @@ void EXC::setExtendVelocity(double speed) {
         else{
             m_extendMotor1.Set(0);
             m_extendMotor2.Set(0);
-        }
+        }*/
 }
 /*
 void EXC::setExtendPosition(int position) {

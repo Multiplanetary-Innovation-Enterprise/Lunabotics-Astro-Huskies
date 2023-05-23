@@ -47,10 +47,10 @@ void HOP::SetBeltVelocity(double speed) {
 
 void HOP::setFlipStow() {
     
-    if(m_flipEncoder.GetPosition() > HOPConstants::stowPosition) {
+    if(m_flipEncoder.GetPosition() > HOPConstants::stowPositionMax) {
         m_flipMotor.Set(0);
     } 
-    else if(m_flipEncoder.GetPosition() < HOPConstants::stowPosition) {
+    else if(m_flipEncoder.GetPosition() < HOPConstants::stowPositionMin) {
         m_flipMotor.Set(HOPConstants::flipVelocity);
         }
    else {m_flipMotor.Set(0);}
@@ -58,20 +58,20 @@ void HOP::setFlipStow() {
 
 void HOP::setFlipDump() {
    
-    if(m_flipEncoder.GetPosition() < HOPConstants::dumpPosition - 5) {
+    if(m_flipEncoder.GetPosition() < HOPConstants::dumpPositionMin) {
         m_flipMotor.Set(HOPConstants::flipVelocity);
     } 
-    else if(m_flipEncoder.GetPosition() > HOPConstants::dumpPosition + 5) {
+    else if(m_flipEncoder.GetPosition() > HOPConstants::dumpPositionMax) {
         m_flipMotor.Set(-HOPConstants::flipVelocity);
         }
    else {m_flipMotor.Set(0);}
 }
 
 void HOP::setFlipTumble() {
-    if(m_flipEncoder.GetPosition() < HOPConstants::tumblePosition) {
+    if(m_flipEncoder.GetPosition() < HOPConstants::tumblePositionMax) {
         m_flipMotor.Set(0);
     } 
-    else if(m_flipEncoder.GetPosition() > HOPConstants::tumblePosition) {
+    else if(m_flipEncoder.GetPosition() > HOPConstants::tumblePositionMin) {
         m_flipMotor.Set(-HOPConstants::flipVelocity);
         }
    else {m_flipMotor.Set(0);}

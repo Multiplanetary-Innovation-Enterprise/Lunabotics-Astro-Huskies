@@ -61,14 +61,9 @@ double EXC::getBucketSpeed() {
 }
 
 void EXC::extendRightScrew(double speed){
-    m_extendMotor1.Set(speed*0.9);
+    m_extendMotor1.Set(speed);
 }
 void EXC::setExtendVelocity(double speed) {
-    m_extendMotor1.Set(speed);
-    m_extendMotor2.Set(speed);
-    string EXCencorders = to_string(EXC::getExcavatorDepth());
-    cout<<"\nEXC extend encoders  "<<EXCencorders;
-    /*
         if(speed > 0){
             if(m_extendEncoder1.GetPosition() > m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed*0.8);
@@ -92,21 +87,11 @@ void EXC::setExtendVelocity(double speed) {
         else{
             m_extendMotor1.Set(0);
             m_extendMotor2.Set(0);
-        }*/
-}
-/*
-void EXC::setExtendPosition(int position) {
-    if(m_extendEncoder1.GetPosition() < position) {
-        setExtendVelocity(EXCConstants::extendVelocity);
-    } else{ setExtendVelocity(0);}
+        }
+        string EXCencorders = to_string(EXC::getExcavatorDepth());
+        cout<<"\nEXC extend encoders  "<<EXCencorders;
 }
 
-void EXC::setRetractPosition(int position) {
-    if(m_extendEncoder1.GetPosition() > position) {
-        setExtendVelocity(EXCConstants::retractVelocity);
-    } else{ setExtendVelocity(0);}
-}
-*/
 void EXC::setBucketSpeed(double speed) {
     m_bucketSpinMotor.Set(speed);
 }

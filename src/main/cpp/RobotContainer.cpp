@@ -33,12 +33,12 @@ RobotContainer::RobotContainer() {
     cout<<"\nHOP Flipper Position  "<<HOPFlip;    
     
     
-    m_CAM.SetDefaultCommand(frc2::cmd::Run(
+    /*m_CAM.SetDefaultCommand(frc2::cmd::Run(
       [this] {
         m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(),
                             m_driverControllerDriver.GetRightY());
       },
-      {&m_CAM}));
+      {&m_CAM}));*/
 
 }
 
@@ -76,22 +76,25 @@ void RobotContainer::ConfigureBindings() {
   
 
   //HOP Bindings
-  m_driverControllerDriver.A()
-  .OnTrue(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(HOPConstants::flipVelocity);}, {&m_HOP}))
-  .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(0);}, {&m_HOP}));
   m_driverControllerDriver.B()
-  .OnTrue(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(-HOPConstants::flipVelocity);}, {&m_HOP}))
+  .WhileTrue(frc2::cmd::Run([this] {m_HOP.setFlipStow();}, {&m_HOP}))
+  .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(0);}, {&m_HOP}));
+  m_driverControllerDriver.Y()
+  .WhileTrue(frc2::cmd::Run([this] {m_HOP.setFlipDump();}, {&m_HOP}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(0);}, {&m_HOP}));
   m_driverControllerDriver.X()
+  .WhileTrue(frc2::cmd::Run([this] {m_HOP.setFlipTumble();}, {&m_HOP}))
+  .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(0);}, {&m_HOP}));
+  m_driverControllerDriver.A()
   .OnTrue(frc2::cmd::RunOnce([this] {m_HOP.SetBeltVelocity(HOPConstants::beltVelocity);}, {&m_HOP}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetBeltVelocity(0);}, {&m_HOP}));
 
   //CAM Bindings
-  m_driverControllerDriver.LeftStick().OnTrue(frc2::cmd::RunOnce([this]
+  /*m_driverControllerDriver.LeftStick().OnTrue(frc2::cmd::RunOnce([this]
      {m_CAM.setVelocity(0.1, 0);}, {&m_CAM} ));
 
   m_driverControllerDriver.RightStick().OnTrue(frc2::cmd::RunOnce([this]
-     {m_CAM.setVelocity(0, 0.1);}, {&m_CAM}));
+     {m_CAM.setVelocity(0, 0.1);}, {&m_CAM}));*/
 
 }
 

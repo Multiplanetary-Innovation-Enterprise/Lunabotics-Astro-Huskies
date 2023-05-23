@@ -42,9 +42,12 @@ namespace HOPConstants {
     constexpr double flipVelocity = 0.2;
 
     //Flipper Rotation Positions
-    constexpr int stowPosition = 0;         // NOT FINALISED
-    constexpr int dumpPosition = -0.35;        // NOT FINALISED
-    constexpr int tumblePosition = -0.7;     // NOT FINALISED
+    constexpr int stowPositionMin = -3;         // NOT FINALISED
+    constexpr int stowPositionMax = 3;
+    constexpr int dumpPositionMin = -95;        // NOT FINALISED
+    constexpr int dumpPositionMax = -85;
+    constexpr int tumblePositionMin = -140;     // NOT FINALISED
+    constexpr int tumblePositionMax = -130;
 }
 
 namespace EXCConstants {
@@ -74,8 +77,8 @@ namespace EXCConstants {
     static const double bucketSpinMotorSpeed = -0.26;
 
     //Excavator Extension Positions
-    constexpr int maxRetraction = -5;
-    constexpr int maxExtension = -1000;       //NOT FINALIZED
+    constexpr int maxRetraction = 0;
+    constexpr int maxExtension = -4000;       //NOT FINALIZED
     constexpr double linearActuatorMax = 2100;
     constexpr double linearActuatorMin = 250;
 

@@ -76,8 +76,8 @@ namespace EXCConstants {
     //Excavator Extension Positions
     constexpr int maxRetraction = -5;
     constexpr int maxExtension = -1000;       //NOT FINALIZED
-    constexpr double linearActuatorMax = 2155;
-    constexpr double linearActuatorMin = 1;
+    constexpr double linearActuatorMax = 2100;
+    constexpr double linearActuatorMin = 250;
 
     //Timers
     }

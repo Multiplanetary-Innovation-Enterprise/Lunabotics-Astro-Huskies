@@ -3,6 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "subsystems/CAM.h"
+#include <iostream>
+#include <string.h>
+using namespace std;
 
 CAM::CAM() : 
 

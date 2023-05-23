@@ -4,6 +4,9 @@
 
 #include "subsystems/HOP.h"
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <iostream>
+#include <string.h>
+using namespace std;
 
 HOP::HOP(): 
     m_beltMotor{HOPConstants::beltMotorID, rev::CANSparkMax::MotorType::kBrushless},
@@ -19,6 +22,8 @@ void HOP::Periodic() {
 
 void HOP::SetFlipVelocity(double flipVelocity) {
     m_flipMotor.Set(flipVelocity);
+    string HOPFlip = to_string(HOP::GetFlipPosition());
+    cout<<"\nHOP Flipper Position  "<<HOPFlip;
     /*if(m_flipEncoder.GetPosition() < HOPConstants::stowPosition && flipVelocity > 0){
         m_flipMotor.Set(flipVelocity);
     }

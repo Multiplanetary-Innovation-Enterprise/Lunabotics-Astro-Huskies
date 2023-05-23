@@ -6,6 +6,9 @@
 #include "Constants.h"
 #include <frc/DigitalOutput.h>
 #include "RobotContainer.h"
+#include <iostream>
+#include <string.h>
+using namespace std;
 time_t time0;
 time_t time1;
 
@@ -63,6 +66,8 @@ void EXC::extendRightScrew(double speed){
 void EXC::setExtendVelocity(double speed) {
     m_extendMotor1.Set(speed);
     m_extendMotor2.Set(speed);
+    string EXCencorders = to_string(EXC::getExcavatorDepth());
+    cout<<"\nEXC extend encoders  "<<EXCencorders;
     /*
         if(speed > 0){
             if(m_extendEncoder1.GetPosition() > m_extendEncoder2.GetPosition()){
@@ -115,6 +120,8 @@ void EXC::setLinearActuatordirection(double direction) {
 void EXC::setLinearActuatorspeed(double speed) {
     m_linearActuatorSpeed1.Set(speed);
     m_linearActuatorSpeed2.Set(speed);
+    string EXClinearActuator = to_string(EXC::getLinearActuatorPosition());
+    cout<<"\nEXC Linear Actuator Position  "<<EXClinearActuator;
 }
 
 void EXC::stowExcavator() {

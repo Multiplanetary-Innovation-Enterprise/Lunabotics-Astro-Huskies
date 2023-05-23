@@ -4,10 +4,12 @@
 
 #include "RobotContainer.h"
 #include <frc2/command/button/Trigger.h>
-
+#include <iostream>
+#include <string.h>
 #include <frc2/command/Commands.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/XboxController.h>
+using namespace std;
 
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
@@ -15,44 +17,61 @@ RobotContainer::RobotContainer() {
   // Configure the button bindings
   ConfigureBindings();
 
-    m_driverControllerCoDriver.RightTrigger()
+    m_driverControllerCoDriver.LeftStick()
     .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.autoEXCState(1);}));
-    m_driverControllerCoDriver.RightBumper()
-      .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.autoEXCState(2);}));
+    m_driverControllerCoDriver.RightStick()
+    .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.autoEXCState(2);}));
     
     m_EXC.autoExcavator();
+    /*
+    string EXCencorders = to_string(m_EXC.getExcavatorDepth());
+    string HOPFlip = to_string(m_HOP.GetFlipPosition());
+    string EXClinearActuator = to_string(m_EXC.getLinearActuatorPosition());
 
+    cout<<"\nEXC extend encoders"<<EXCencorders;
+    cout<<"\nEXC Linear Actuator Position"<<EXClinearActuator;
+    cout<<"\nHOP Flipper Position\n"<<HOPFlip;    
+    
     
     m_CAM.SetDefaultCommand(frc2::cmd::Run(
       [this] {
         m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(),
                             m_driverControllerDriver.GetRightY());
       },
-      {&m_CAM}));
+      {&m_CAM}));*/
+
 }
 
 void RobotContainer::ConfigureBindings() {
   // EXC Bndings
   // Spin Buckets
-  m_driverControllerCoDriver.LeftTrigger()
+  m_driverControllerCoDriver.A()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setBucketSpeed(0);}, {&m_EXC}));
+  m_driverControllerCoDriver.B()
+  .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.setBucketSpeed(-EXCConstants::bucketSpinMotorSpeed);}, {&m_EXC}))
+  .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setBucketSpeed(0);}, {&m_EXC}));
   //Stow Excavator
-  m_driverControllerCoDriver.A()
+  m_driverControllerCoDriver.RightBumper()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.stowExcavator();}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setLinearActuatorspeed(0);}, {&m_EXC}));
   //Deploy Excavator
-  m_driverControllerCoDriver.B()
+  m_driverControllerCoDriver.LeftBumper()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.deployExcavator();}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setLinearActuatorspeed(0);}, {&m_EXC}));
   //Extend Excavator
-  m_driverControllerCoDriver.X()
+  m_driverControllerCoDriver.LeftTrigger()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.setExtendVelocity(EXCConstants::extendVelocity);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setExtendVelocity(0);}, {&m_EXC}));
-  m_driverControllerCoDriver.Y()
+  m_driverControllerCoDriver.RightTrigger()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.setExtendVelocity(EXCConstants::retractVelocity);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setExtendVelocity(0);}, {&m_EXC}));
-
+  m_driverControllerCoDriver.X()
+  .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(EXCConstants::extendVelocity);}, {&m_EXC}))
+  .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(0);}, {&m_EXC}));
+  m_driverControllerCoDriver.Y()
+  .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(-EXCConstants::extendVelocity);}, {&m_EXC}))
+  .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(0);}, {&m_EXC}));
 
   //HOP Bindings
   m_driverControllerDriver.A()

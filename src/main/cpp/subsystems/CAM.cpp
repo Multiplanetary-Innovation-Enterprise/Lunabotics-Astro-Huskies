@@ -24,9 +24,20 @@ void CAM::Periodic() {}
 // The function continullay runs and reads the joystick value
 
   void CAM::setVelocity(double leftVelocity, double rightVelocity) {
-    m_driveMotor1.Set(leftVelocity);
-    m_driveMotor3.Set(leftVelocity);
-
-    m_driveMotor2.Set(rightVelocity);
-    m_driveMotor4.Set(rightVelocity);
+    if(leftVelocity > 0.05 || leftVelocity < -0.05){
+      m_driveMotor1.Set(leftVelocity);
+      m_driveMotor3.Set(leftVelocity);
+    }
+    else {
+      m_driveMotor1.Set(0);
+      m_driveMotor3.Set(0);
+    }
+    if(rightVelocity > 0.05 || rightVelocity < -0.05){
+      m_driveMotor2.Set(rightVelocity);
+      m_driveMotor4.Set(rightVelocity);
+    }
+    else {
+      m_driveMotor2.Set(0);
+      m_driveMotor4.Set(0);
+    }
 }

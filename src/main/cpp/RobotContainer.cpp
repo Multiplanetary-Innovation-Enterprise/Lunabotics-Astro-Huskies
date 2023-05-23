@@ -23,14 +23,14 @@ RobotContainer::RobotContainer() {
     .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.autoEXCState(2);}));
     
     m_EXC.autoExcavator();
-    /*
+    
     string EXCencorders = to_string(m_EXC.getExcavatorDepth());
     string HOPFlip = to_string(m_HOP.GetFlipPosition());
     string EXClinearActuator = to_string(m_EXC.getLinearActuatorPosition());
 
-    cout<<"\nEXC extend encoders"<<EXCencorders;
-    cout<<"\nEXC Linear Actuator Position"<<EXClinearActuator;
-    cout<<"\nHOP Flipper Position\n"<<HOPFlip;    
+    cout<<"\nEXC extend encoders  "<<EXCencorders;
+    cout<<"\nEXC Linear Actuator Position  "<<EXClinearActuator;
+    cout<<"\nHOP Flipper Position  "<<HOPFlip;    
     
     
     m_CAM.SetDefaultCommand(frc2::cmd::Run(
@@ -38,7 +38,7 @@ RobotContainer::RobotContainer() {
         m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(),
                             m_driverControllerDriver.GetRightY());
       },
-      {&m_CAM}));*/
+      {&m_CAM}));
 
 }
 
@@ -66,12 +66,14 @@ void RobotContainer::ConfigureBindings() {
   m_driverControllerCoDriver.RightTrigger()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.setExtendVelocity(EXCConstants::retractVelocity);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setExtendVelocity(0);}, {&m_EXC}));
+  
   m_driverControllerCoDriver.X()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(EXCConstants::extendVelocity);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(0);}, {&m_EXC}));
   m_driverControllerCoDriver.Y()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(-EXCConstants::extendVelocity);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(0);}, {&m_EXC}));
+  
 
   //HOP Bindings
   m_driverControllerDriver.A()

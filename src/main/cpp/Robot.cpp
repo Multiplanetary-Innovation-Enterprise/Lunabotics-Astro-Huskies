@@ -3,9 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-
+#include <iostream>
+#include <string.h>
 #include <frc2/command/CommandScheduler.h>
-
+using namespace std;
 void Robot::RobotInit() {}
 
 /**

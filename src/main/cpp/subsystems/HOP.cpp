@@ -18,21 +18,51 @@ void HOP::Periodic() {
 }
 
 void HOP::SetFlipVelocity(double flipVelocity) {
-    m_flipMotor.Set(flipVelocity);
+    if(HOP::GetFlipPosition() > HOPConstants::stowPosition && flipVelocity > 0){
+        m_flipMotor.Set(flipVelocity);
+    }
+    else if(HOP::GetFlipPosition() < HOPConstants::tumblePosition && flipVelocity < 0){
+        m_flipMotor.Set(flipVelocity);
+    }
+    else{
+        m_flipMotor.Set(0);
+    }
+    
 }
 
 
-void HOP::SetBeltVelocity(double beltVelocity) {
-    m_beltMotor.Set(HOPConstants::beltVelocity);
+void HOP::SetBeltVelocity(double speed) {
+    m_beltMotor.Set(speed);
+    double num = m_beltEncoder.GetPosition();
+    printf("%lf\n", num);
 }
 
-
-void HOP::SetFlipPosition(int position) {
-   if(m_flipEncoder.GetPosition() < position - 5) {
+void HOP::setFlipStow() {
+    if(m_flipEncoder.GetPosition() > HOPConstants::stowPosition) {
+        m_flipMotor.Set(0);
+    } 
+    else if(m_flipEncoder.GetPosition() < HOPConstants::stowPosition) {
         m_flipMotor.Set(HOPConstants::flipVelocity);
-   } 
-   else if(m_flipEncoder.GetPosition() > position + 5) {
+        }
+   else {m_flipMotor.Set(0);}
+}
+
+void HOP::setFlipDump() {
+    if(m_flipEncoder.GetPosition() < HOPConstants::dumpPosition - 5) {
+        m_flipMotor.Set(HOPConstants::flipVelocity);
+    } 
+    else if(m_flipEncoder.GetPosition() > HOPConstants::dumpPosition + 5) {
         m_flipMotor.Set(-HOPConstants::flipVelocity);
-   }
+        }
+   else {m_flipMotor.Set(0);}
+}
+
+void HOP::setFlipTumble() {
+    if(m_flipEncoder.GetPosition() < HOPConstants::tumblePosition) {
+        m_flipMotor.Set(0);
+    } 
+    else if(m_flipEncoder.GetPosition() > HOPConstants::tumblePosition) {
+        m_flipMotor.Set(-HOPConstants::flipVelocity);
+        }
    else {m_flipMotor.Set(0);}
 }

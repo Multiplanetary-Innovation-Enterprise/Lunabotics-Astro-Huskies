@@ -44,7 +44,7 @@ int EXC::getExcavatorDepth() {
 int EXC::getLinearActuatorPosition() {
     if(m_linearActuatorPosition1.GetValue() <= m_linearActuatorPosition2.GetValue()) {
         return m_linearActuatorPosition1.GetValue(); 
-    } else { m_linearActuatorPosition2.GetValue();}
+    } else { return m_linearActuatorPosition2.GetValue();}
 }
 
 double EXC::getExtendVelocity() {
@@ -60,8 +60,19 @@ double EXC::getBucketSpeed() {
 }
 
 void EXC::setExtendVelocity(double speed) {
-    m_extendMotor1.Set(speed);
-    m_extendMotor2.Set(speed);
+    if(EXC::getExcavatorDepth() > EXCConstants::maxRetraction && speed < 0){
+        m_extendMotor1.Set(speed);
+        m_extendMotor2.Set(speed);
+    }
+    else if(EXC::getExcavatorDepth() < EXCConstants::maxExtension  && speed > 0){
+        m_extendMotor1.Set(speed);
+        m_extendMotor2.Set(speed);
+    }
+    else {
+        m_extendMotor1.Set(0);
+        m_extendMotor2.Set(0);
+    }
+    
 }
 
 void EXC::setExtendPosition(int position) {
@@ -91,13 +102,28 @@ void EXC::setLinearActuatorspeed(double speed) {
 }
 
 void EXC::stowExcavator() {
-    EXC::setLinearActuatordirection(EXCConstants::linearActuatorRetractValue);
-    EXC::setLinearActuatorspeed(EXCConstants::linearActuatorVelocity);
+    
+    if(EXC::getLinearActuatorPosition() > EXCConstants::linearActuatorMin) {
+        EXC::setLinearActuatordirection(EXCConstants::linearActuatorRetractValue);
+        EXC::setLinearActuatorspeed(EXCConstants::linearActuatorVelocity);
+    } 
+    else {
+        EXC::setLinearActuatordirection(0);
+        EXC::setLinearActuatorspeed(0);
+    }
 }
 
 void EXC::deployExcavator() {
-    EXC::setLinearActuatordirection(EXCConstants::linearActuatorForwardValue);
-    EXC::setLinearActuatorspeed(EXCConstants::linearActuatorVelocity);
+    if(EXC::getLinearActuatorPosition() < EXCConstants::linearActuatorMax){
+        EXC::setLinearActuatordirection(EXCConstants::linearActuatorForwardValue);
+        EXC::setLinearActuatorspeed(EXCConstants::linearActuatorVelocity);
+    }
+    else {
+        EXC::setLinearActuatordirection(0);
+        EXC::setLinearActuatorspeed(0);
+    }
+    
+    
 }
 
 void EXC::autoEXCState(int autoState) {
@@ -142,7 +168,7 @@ void EXC::autoExcavator() {
         }
         else if(state == 4){
             EXC::setExtendVelocity(EXCConstants::retractVelocity);
-            if(EXC::getExcavatorDepth() < 5){
+            if(EXC::getExcavatorDepth() < EXCConstants::maxRetraction){
                 state = 5;
                 EXC::setBucketSpeed(0);
             }

@@ -20,6 +20,7 @@
 namespace OperatorConstants {
 
 constexpr int kDriverControllerPort = 0;
+constexpr int jDriverControllerPort = 1;
 
 }  // namespace OperatorConstants
 
@@ -33,25 +34,25 @@ namespace CAMConstants {
 
 namespace HOPConstants {
     //Hopper CAN IDs
-    constexpr int beltMotorID = 14; 
-    constexpr int flipMotorID = 22; 
+    constexpr int beltMotorID = 22; 
+    constexpr int flipMotorID = 14; 
 
     //Motor Speeds
     constexpr double beltVelocity = 0.5;
-    constexpr double flipVelocity = 0.1;
+    constexpr double flipVelocity = 0.3;
 
     //Flipper Rotation Positions
     constexpr int stowPosition = 0;         // NOT FINALISED
-    constexpr int dumpPosition = 90;        // NOT FINALISED
-    constexpr int tumblePosition = 180;     // NOT FINALISED
+    constexpr int dumpPosition = -90;        // NOT FINALISED
+    constexpr int tumblePosition = -180;     // NOT FINALISED
 }
 
 namespace EXCConstants {
     //DIO ports
     static const int linearActuatorID_dir = 1;
     static const int linearActuatorID2_dir = 3;
-    static const int linearActuatorID_speed = 2;
-    static const int linearActuatorID_speed2 = 4;
+    static const int linearActuatorID_speed = 0;
+    static const int linearActuatorID_speed2 = 2;
 
     //Analog ports
     //static const int linearActuatorID1Pot = 1;
@@ -63,20 +64,20 @@ namespace EXCConstants {
     constexpr int bucketSpinMotorID = 23;
 
     //Motor Speeds
-    static const double extendVelocity = 1;
-    static const double retractVelocity = -1;
+    static const double extendVelocity = -0.5;
+    static const double retractVelocity = 0.5;
 
-    static const double linearActuatorVelocity = 1;
-    static const double linearActuatorForwardValue = 1;
+    static const double linearActuatorVelocity = 0.5;
+    static const double linearActuatorForwardValue = 0.5;
     static const double linearActuatorRetractValue = 0;
 
-    static const double bucketSpinMotorSpeed = 0.1;
+    static const double bucketSpinMotorSpeed = -0.3;
 
     //Excavator Extension Positions
-    constexpr int maxRetraction = 0;
-    constexpr int maxExtension = 100;       //NOT FINALIZED
-    constexpr int linearActuatorMax =128;
-    constexpr int linearActuatorMin = 0;
+    constexpr int maxRetraction = -5;
+    constexpr int maxExtension = -1000;       //NOT FINALIZED
+    constexpr double linearActuatorMax = 4.9;
+    constexpr double linearActuatorMin = 0.2;
 
     //Timers
     }

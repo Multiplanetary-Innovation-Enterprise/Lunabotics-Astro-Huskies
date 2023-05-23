@@ -25,7 +25,9 @@ class HOP : public frc2::SubsystemBase {
 
   double GetBeltVelocity();
   double GetFlipPosition();
-
+  void slowHopperSpeed();
+  void increaseHopperSpeed();
+  
    /**
    * Subsytem will move the flip to the target position
   */

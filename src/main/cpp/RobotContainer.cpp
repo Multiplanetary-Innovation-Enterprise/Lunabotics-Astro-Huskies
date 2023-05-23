@@ -22,7 +22,7 @@ RobotContainer::RobotContainer() {
     
     m_EXC.autoExcavator();
 
-
+    
     m_CAM.SetDefaultCommand(frc2::cmd::Run(
       [this] {
         m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(),

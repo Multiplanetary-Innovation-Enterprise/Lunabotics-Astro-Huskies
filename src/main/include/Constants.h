@@ -67,7 +67,7 @@ namespace EXCConstants {
     constexpr int bucketSpinMotorID = 23;
 
     //Motor Speeds
-    static const double extendVelocity = -0.5;
+    static const double extendVelocity = -0.3;
     static const double retractVelocity = 0.5;
 
     static const double linearActuatorVelocity = 0.5;
@@ -78,7 +78,7 @@ namespace EXCConstants {
 
     //Excavator Extension Positions
     constexpr int maxRetraction = 0;
-    constexpr int maxExtension = -4000;       //NOT FINALIZED
+    constexpr int maxExtension = -3000;       //NOT FINALIZED
     constexpr double linearActuatorMax = 2100;
     constexpr double linearActuatorMin = 250;
 

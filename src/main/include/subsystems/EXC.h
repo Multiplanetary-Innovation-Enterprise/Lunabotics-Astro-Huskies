@@ -41,8 +41,7 @@ class EXC : public frc2::SubsystemBase {
    */
   void setExtendVelocity(double speed);
   void setExtendPosition(int position);
-  void setRetractPosition(int position);
-  
+  void setRetractPosition(int position);  
   /**
    * Function will set the speed of the bucket motor.
    */
@@ -56,8 +55,8 @@ class EXC : public frc2::SubsystemBase {
 
   void stowExcavator();
   void deployExcavator();
-  void autoExcavator();
-  void autoEXCState(int autoState);
+  void autoExcavator(int autoState);
+  ///void autoEXCState(int autostate);
   void extendRightScrew(double speed);
   void extendLeftScrew(double speed);
   double getLinearActuatorPosition();

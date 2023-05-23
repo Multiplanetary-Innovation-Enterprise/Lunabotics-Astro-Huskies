@@ -30,6 +30,10 @@ void HOP::SetFlipVelocity(double flipVelocity) {
     
 }
 
+double HOP::GetFlipPosition(){
+    return m_flipEncoder.GetPosition();
+}
+
 
 void HOP::SetBeltVelocity(double speed) {
     m_beltMotor.Set(speed);

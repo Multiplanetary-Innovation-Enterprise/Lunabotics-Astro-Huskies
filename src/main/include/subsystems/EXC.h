@@ -58,8 +58,9 @@ class EXC : public frc2::SubsystemBase {
   void deployExcavator();
   void autoExcavator();
   void autoEXCState(int autoState);
-  
-  int getLinearActuatorPosition();
+  void extendRightScrew(double speed);
+  void extendLeftScrew(double speed);
+  double getLinearActuatorPosition();
 
  private:
   // Components (e.g. motor controllers and sensors) 

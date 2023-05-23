@@ -36,12 +36,10 @@ void EXC::Periodic() {
 int EXC::getExcavatorDepth() {
     if(m_extendEncoder1.GetPosition() >= m_extendEncoder2.GetPosition()) {
         return m_extendEncoder1.GetPosition();
-    } else {
-        return m_extendEncoder2.GetPosition();
-    }
+    } else {return m_extendEncoder2.GetPosition();}
 }
 
-int EXC::getLinearActuatorPosition() {
+double EXC::getLinearActuatorPosition() {
     if(m_linearActuatorPosition1.GetValue() <= m_linearActuatorPosition2.GetValue()) {
         return m_linearActuatorPosition1.GetValue(); 
     } else { return m_linearActuatorPosition2.GetValue();}
@@ -59,31 +57,36 @@ double EXC::getBucketSpeed() {
     return m_bucketEncoder.GetVelocity();
 }
 
+void EXC::extendRightScrew(double speed){
+    m_extendMotor1.Set(speed*0.9);
+}
 void EXC::setExtendVelocity(double speed) {
-        m_extendMotor1.Set(speed);
-        m_extendMotor2.Set(speed);
         if(speed > 0){
             if(m_extendEncoder1.GetPosition() > m_extendEncoder2.GetPosition()){
-                m_extendMotor1.Set(speed*0.9);
+                m_extendMotor1.Set(speed*0.8);
                 m_extendMotor2.Set(speed);
             }
             else if(m_extendEncoder1.GetPosition() < m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed);
-                m_extendMotor2.Set(speed*0.9);
+                m_extendMotor2.Set(speed*0.8);
             }
         }   
         else if(speed < 0){
             if(m_extendEncoder1.GetPosition() < m_extendEncoder2.GetPosition()){
-                m_extendMotor1.Set(speed*0.9);
+                m_extendMotor1.Set(speed*0.8);
                 m_extendMotor2.Set(speed);
             }
             else if(m_extendEncoder1.GetPosition() > m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed);
-                m_extendMotor2.Set(speed*0.9);
+                m_extendMotor2.Set(speed*0.8);
             }
         } 
+        else{
+            m_extendMotor1.Set(0);
+            m_extendMotor2.Set(0);
+        }
 }
-
+/*
 void EXC::setExtendPosition(int position) {
     if(m_extendEncoder1.GetPosition() < position) {
         setExtendVelocity(EXCConstants::extendVelocity);
@@ -95,10 +98,11 @@ void EXC::setRetractPosition(int position) {
         setExtendVelocity(EXCConstants::retractVelocity);
     } else{ setExtendVelocity(0);}
 }
-
+*/
 void EXC::setBucketSpeed(double speed) {
     m_bucketSpinMotor.Set(speed);
 }
+
 
 void EXC::setLinearActuatordirection(double direction) {
     m_linearActuatordir1.Set(direction);
@@ -123,14 +127,14 @@ void EXC::stowExcavator() {
 }
 
 void EXC::deployExcavator() {
-    //if(EXC::getLinearActuatorPosition() < EXCConstants::linearActuatorMax){
+    if(EXC::getLinearActuatorPosition() < EXCConstants::linearActuatorMax){
         EXC::setLinearActuatordirection(EXCConstants::linearActuatorForwardValue);
         EXC::setLinearActuatorspeed(EXCConstants::linearActuatorVelocity);
-    /*}
+    }
     else {
         EXC::setLinearActuatordirection(0);
         EXC::setLinearActuatorspeed(0);
-    }*/
+    }
     
     
 }
@@ -154,40 +158,38 @@ void EXC::autoExcavator() {
             time(&time0); //GetCurrentTime
         }
         else if (state == 1){
-            EXC::deployExcavator();
             if(EXC::getLinearActuatorPosition() >= EXCConstants::linearActuatorMax) {
                 state = 2;
                 EXC::setLinearActuatorspeed(0);
-            }
+            } else{EXC::deployExcavator();}
         }
         else if(state == 2){
-            EXC::setExtendVelocity(EXCConstants::extendVelocity);
-            EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
             if(EXC::getExcavatorDepth() > EXCConstants::maxExtension){
                 state = 3;
                 EXC::setExtendVelocity(0);
             }
+            else{
+            EXC::setExtendVelocity(EXCConstants::extendVelocity);
+            EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+            }
         }
         else if(state == 3){
-            EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
             time(&time1); //GetTimePassed
             if(time1 - time0 > 300000){
                 state = 4;
-            }
+            } else{EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);}
         }
         else if(state == 4){
-            EXC::setExtendVelocity(EXCConstants::retractVelocity);
             if(EXC::getExcavatorDepth() < EXCConstants::maxRetraction){
                 state = 5;
                 EXC::setBucketSpeed(0);
-            }
+            } else{EXC::setExtendVelocity(EXCConstants::retractVelocity);}
         }
         else if(state == 5){
-            EXC::stowExcavator();
             if(EXC::getLinearActuatorPosition() <= EXCConstants::linearActuatorMin) {
                 state = 6;
                 EXC::setLinearActuatorspeed(0);
-            }  
+            } else{EXC::stowExcavator();}
         }
         else if(state == 6){
             EXC::setBucketSpeed(0);

@@ -10,7 +10,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/XboxController.h>
 using namespace std;
-
+double speedAdjust;
 RobotContainer::RobotContainer() {
   // Initialize all of your commands and subsystems here
 
@@ -68,12 +68,33 @@ void RobotContainer::ConfigureBindings() {
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(0);}, {&m_EXC}));
   
   m_driverControllerDriver.RightTrigger()
-  .WhileTrue(frc2::cmd::Run([this] {m_EXC.autoExcavator(1);}));
+  .WhileTrue(frc2::cmd::Run([this] {
+    m_EXC.autoEXCState(1); 
+    int CommandVAR = m_EXC.autoExcavator(); 
+    //m_HOP.autoHopper(CommandVAR);
+    m_CAM.autoChassis(CommandVAR);
+    }, {&m_EXC}))
+  .OnFalse(frc2::cmd::Run([this] {
+    int CommandVAR = m_EXC.autoExcavator(); 
+    //m_HOP.autoHopper(CommandVAR);
+    //m_CAM.autoChassis(CommandVAR);
+    }, {&m_EXC}));
+
   m_driverControllerDriver.LeftTrigger()
-  .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.autoExcavator(2);}));
-    
+  .WhileTrue(frc2::cmd::RunOnce([this] {
+    m_EXC.autoEXCState(2); 
+    int CommandVAR = m_EXC.autoExcavator();
+    //m_HOP.autoHopper(CommandVAR);
+    //m_CAM.autoChassis(CommandVAR);
+    }, {&m_EXC}));
 
   //HOP Bindings
+  m_driverControllerDriver.RightBumper()
+  .OnTrue(frc2::cmd::RunOnce([this] { speedAdjust = m_HOP.HopperSpeed(2); }, {&m_HOP}))
+  .OnFalse(frc2::cmd::Run([this] { speedAdjust = m_HOP.HopperSpeed(0); }, {&m_HOP}));
+  m_driverControllerDriver.LeftBumper()
+  .OnTrue(frc2::cmd::RunOnce([this] { speedAdjust = m_HOP.HopperSpeed(1); }, {&m_HOP}))
+  .OnFalse(frc2::cmd::Run([this] { speedAdjust = m_HOP.HopperSpeed(0); }, {&m_HOP}));
   m_driverControllerDriver.B()
   .WhileTrue(frc2::cmd::Run([this] {m_HOP.setFlipStow();}, {&m_HOP}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(0);}, {&m_HOP}));
@@ -84,7 +105,7 @@ void RobotContainer::ConfigureBindings() {
   .WhileTrue(frc2::cmd::Run([this] {m_HOP.setFlipTumble();}, {&m_HOP}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(0);}, {&m_HOP}));
   m_driverControllerDriver.A()
-  .OnTrue(frc2::cmd::RunOnce([this] {m_HOP.SetBeltVelocity(HOPConstants::beltVelocity);}, {&m_HOP}))
+  .WhileTrue(frc2::cmd::Run([this] {m_HOP.SetBeltVelocity(speedAdjust);}, {&m_HOP}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetBeltVelocity(0);}, {&m_HOP}));
 
   //CAM Bindings

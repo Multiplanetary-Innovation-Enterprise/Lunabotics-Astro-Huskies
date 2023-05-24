@@ -7,13 +7,23 @@
 #include <frc/DigitalOutput.h>
 #include "RobotContainer.h"
 #include <iostream>
+#include "subsystems/HOP.h"
+#include "subsystems/CAM.h"
 #include <string.h>
+
 using namespace std;
 time_t time0;
 time_t time1;
 
 int state = 0;
 int isAuto = 0;
+int Commandvar = 0;
+// 0 -> CAM & HOP off
+// 1 -> Set Flipper to Tumble
+// 2 -> Drive Belt & CAM
+// 3 -> Turn off Belt & CAM
+// 4 -> Set Flipper to Dump
+
 EXC::EXC(): 
     m_extendMotor1{EXCConstants::extendMotor1ID, rev::CANSparkMax::MotorType::kBrushless},
     m_extendMotor2{EXCConstants::extendMotor2ID, rev::CANSparkMax::MotorType::kBrushless},
@@ -26,7 +36,7 @@ EXC::EXC():
 
     //m_linearActuatorPosition1{EXCConstants::linearActuatorID1Pot},
     //m_linearActuatorPosition2{EXCConstants::linearActuatorID2Pot},
-    
+
     m_extendEncoder1{m_extendMotor1.GetEncoder()},
     m_extendEncoder2{m_extendMotor2.GetEncoder()}, 
     m_bucketEncoder{m_bucketSpinMotor.GetEncoder()} {}
@@ -63,9 +73,8 @@ double EXC::getBucketSpeed() {
 void EXC::extendRightScrew(double speed){
     m_extendMotor1.Set(speed);
 }
+
 void EXC::setExtendVelocity(double speed) {
-    string EXCspeed = to_string(speed);
-    cout<<"\nEXC speed  "<<EXCspeed;
         if(speed > 0){
             if(m_extendEncoder1.GetPosition() >= m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed*0.8);
@@ -91,14 +100,11 @@ void EXC::setExtendVelocity(double speed) {
             m_extendMotor1.Set(0);
             m_extendMotor2.Set(0);
         }
-        string EXCencorders = to_string(EXC::getExcavatorDepth());
-        cout<<"\nEXC extend encoders  "<<EXCencorders;
 }
 
 void EXC::setBucketSpeed(double speed) {
     m_bucketSpinMotor.Set(speed);
 }
-
 
 void EXC::setLinearActuatordirection(double direction) {
     m_linearActuatordir1.Set(direction);
@@ -108,8 +114,6 @@ void EXC::setLinearActuatordirection(double direction) {
 void EXC::setLinearActuatorspeed(double speed) {
     m_linearActuatorSpeed1.Set(speed);
     m_linearActuatorSpeed2.Set(speed);
-    string EXClinearActuator = to_string(EXC::getLinearActuatorPosition());
-    cout<<"\nEXC Linear Actuator Position  "<<EXClinearActuator;
 }
 
 void EXC::stowExcavator() {
@@ -137,15 +141,14 @@ void EXC::deployExcavator() {
     
 }
 
-/*void EXC::autoEXCState(int autoState) {
+void EXC::autoEXCState(int autoState) {
     isAuto = autoState;
-}*/
+}
 
-void EXC::autoExcavator(int autostate) {
-    string Autostate = to_string(state);
-    cout<<"\nEXC Auto state  "<<Autostate;
+int EXC::autoExcavator() {
     /*string AutoisAuto = to_string(autostate);
     cout<<"\nis auto?  "<<AutoisAuto;*/
+    int autostate = isAuto;
     if(autostate == 1){
         //state = 0 ->initialize
         //state = 1 ->deploy
@@ -173,22 +176,31 @@ void EXC::autoExcavator(int autostate) {
             else{
             EXC::setExtendVelocity(EXCConstants::extendVelocity);
             EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+            Commandvar = 1;
             }
         }
         else if(state == 3){
             time(&time1); //GetTimePassed
-            string timer = to_string(time1-time0);
-            cout<<"\nEXC time  "<<timer;
             if(time1 - time0 > 150){
                 state = 4;
                 EXC::setBucketSpeed(0);
-            } else{EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);}
+                Commandvar = 3;
+            } 
+            else{
+                EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+                Commandvar = 2;
+            }
         }
         else if(state == 4){
             if(EXC::getExcavatorDepth() > EXCConstants::maxRetraction){
                 state = 5;
                 EXC::setExtendVelocity(0);
-            } else{EXC::setExtendVelocity(EXCConstants::retractVelocity);}
+                Commandvar = 0;
+            } 
+            else{
+                EXC::setExtendVelocity(EXCConstants::retractVelocity);
+                Commandvar = 4;
+            }
         }
         else if(state == 5){
             if(EXC::getLinearActuatorPosition() <= EXCConstants::linearActuatorMin) {
@@ -202,6 +214,7 @@ void EXC::autoExcavator(int autostate) {
             EXC::setLinearActuatorspeed(0);
             isAuto = 0;
             state = 6;
+            Commandvar = 0;
         }
         
     }
@@ -210,11 +223,15 @@ void EXC::autoExcavator(int autostate) {
         EXC::setExtendVelocity(0);
         EXC::setLinearActuatorspeed(0);
         isAuto = 0;
+        Commandvar = 5;
     }
     else{
         EXC::setBucketSpeed(0);
         EXC::setExtendVelocity(0);
         EXC::setLinearActuatorspeed(0);
+        Commandvar = 0;
         isAuto = 0; 
+
     }
+    return Commandvar;
 }

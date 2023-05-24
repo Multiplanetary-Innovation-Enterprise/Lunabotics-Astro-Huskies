@@ -7,7 +7,7 @@
 #include <iostream>
 #include <string.h>
 using namespace std;
-
+double adjustedBeltVelocity = (HOPConstants::beltVelocity);
 HOP::HOP(): 
     m_beltMotor{HOPConstants::beltMotorID, rev::CANSparkMax::MotorType::kBrushless},
     m_beltEncoder{m_beltMotor.GetEncoder()},
@@ -22,8 +22,6 @@ void HOP::Periodic() {
 
 void HOP::SetFlipVelocity(double flipVelocity) {
     m_flipMotor.Set(flipVelocity);
-    string HOPFlip = to_string(HOP::GetFlipPosition());
-    cout<<"\nHOP Flipper Position  "<<HOPFlip;
     /*if(m_flipEncoder.GetPosition() < HOPConstants::stowPosition && flipVelocity > 0){
         m_flipMotor.Set(flipVelocity);
     }
@@ -39,8 +37,6 @@ void HOP::SetFlipVelocity(double flipVelocity) {
 double HOP::GetFlipPosition(){
     return m_flipEncoder.GetPosition();
 }
-
-
 
 
 void HOP::SetBeltVelocity(double speed) {
@@ -77,4 +73,49 @@ void HOP::setFlipTumble() {
         m_flipMotor.Set(-HOPConstants::flipVelocity);
         }
    else {m_flipMotor.Set(0);}
+}
+
+double HOP::HopperSpeed(int speedAdjust) {
+    
+    if(speedAdjust == 1) {
+        adjustedBeltVelocity = adjustedBeltVelocity -.02;
+        string beltSpeed = to_string(adjustedBeltVelocity);
+        cout<<"\nHOP Belt Speed Up %d"<<beltSpeed;
+    }
+    else if(speedAdjust == 2) {
+        adjustedBeltVelocity =adjustedBeltVelocity + .02;
+        string beltSpeed = to_string(adjustedBeltVelocity);
+        cout<<"\nHOP Belt Speed Low %d"<<beltSpeed;
+    }
+    else {
+        adjustedBeltVelocity =adjustedBeltVelocity;
+        string beltSpeed = to_string(adjustedBeltVelocity);
+        cout<<"\nHOP Belt Speed Same %d"<<beltSpeed;
+    }
+    return adjustedBeltVelocity;
+}
+
+void HOP::autoHopper(int Commandvar){
+    // 0 -> Don't do anything
+    // 1 -> Set Flipper to Tumble
+    // 2 -> Drive Belt & CAM
+    // 3 -> Turn off Belt & CAM
+    // 4 -> Set Flipper to Dump
+    // 5 -> CAM and HOP off
+    if(Commandvar == 1) {
+        HOP::setFlipTumble();
+    }
+    else if(Commandvar == 2) {
+        HOP::SetBeltVelocity(HOPConstants::beltVelocity);
+    }
+    else if(Commandvar == 3) {
+        HOP::SetBeltVelocity(0);
+    }
+    else if(Commandvar == 4) {
+        HOP::setFlipDump();
+    }
+    else if(Commandvar == 5) {
+        HOP::SetBeltVelocity(0);
+        HOP::SetFlipVelocity(0);
+    }
 }

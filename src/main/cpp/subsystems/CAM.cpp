@@ -5,8 +5,10 @@
 #include "subsystems/CAM.h"
 #include <iostream>
 #include <string.h>
+#include "Constants.h"
 using namespace std;
-
+time_t time2;
+time_t time3;
 CAM::CAM() : 
 
 m_driveMotor1{CAMConstants::driveMotor1ID, rev::CANSparkMax::MotorType::kBrushless},
@@ -27,9 +29,13 @@ void CAM::Periodic() {}
 // The function continullay runs and reads the joystick value
 
   void CAM::setVelocity(double leftVelocity, double rightVelocity) {
+    string leftspeed = to_string(leftVelocity);
+    cout<<"\n Speed  "<<leftspeed;
     if(leftVelocity > 0.05 || leftVelocity < -0.05){
       m_driveMotor1.Set(leftVelocity);
       m_driveMotor3.Set(leftVelocity);
+      string leftspeed = to_string(leftVelocity);
+      cout<<"\n Left Speed  "<<leftspeed;
     }
     else {
       m_driveMotor1.Set(0);
@@ -38,9 +44,41 @@ void CAM::Periodic() {}
     if(rightVelocity > 0.05 || rightVelocity < -0.05){
       m_driveMotor2.Set(rightVelocity);
       m_driveMotor4.Set(rightVelocity);
+      string rightspeed = to_string(rightVelocity);
+      cout<<"\n Right Speed  "<<rightspeed;
     }
     else {
       m_driveMotor2.Set(0);
       m_driveMotor4.Set(0);
     }
+}
+void CAM::autoChassis(int Commandvar) {
+    // 0 -> Don't do anything
+    // 1 -> Set Flipper to Tumble
+    // 2 -> Drive Belt & CAM
+    // 3 -> Turn off Belt & CAM
+    // 4 -> Set Flipper to Dump
+    // 5 -> CAM and HOP off
+  if (Commandvar == 1) {
+    time(&time2);
+  }
+  if (Commandvar == 2) {
+    time(&time3);
+
+    if(((time3 - time2) % 3) == 1) {
+      string timer = to_string(((time3 - time2) % 3) == 1);
+      cout<<"\nCAM time  "<<timer;
+      CAM::setVelocity(-0.1, 0.1);
+    } 
+    else {
+      CAM::setVelocity(0,0);
+      cout<<"\nCAM off";
+    }
+  }
+  else if(Commandvar == 3) {
+    CAM::setVelocity(0,0);
+  }
+  else if(Commandvar == 5) {
+    CAM::setVelocity(0,0);
+  }
 }

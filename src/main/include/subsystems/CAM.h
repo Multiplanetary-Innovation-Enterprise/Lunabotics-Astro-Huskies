@@ -17,7 +17,7 @@ class CAM : public frc2::SubsystemBase {
    * Will be called periodically whenever the CommandScheduler runs.
    */
   void Periodic() override;
-
+  void autoChassis(int Commandvar);
   void setVelocity(double leftVelocity, double rightVelocity);
 
  private:

@@ -30,6 +30,11 @@ namespace CAMConstants {
     constexpr int driveMotor2ID = 21;
     constexpr int driveMotor3ID = 20;
     constexpr int driveMotor4ID = 15;
+
+    //Chassis auto speed
+    constexpr int leftSpeed = 0.1;
+    constexpr int rightSpeed = -0.1;
+    
 }
 
 namespace HOPConstants {
@@ -74,11 +79,11 @@ namespace EXCConstants {
     static const double linearActuatorForwardValue = 0.5;
     static const double linearActuatorRetractValue = 0;
 
-    static const double bucketSpinMotorSpeed = -0.26;
+    static const double bucketSpinMotorSpeed = -0.3;
 
     //Excavator Extension Positions
     constexpr int maxRetraction = 0;
-    constexpr int maxExtension = -3000;       //NOT FINALIZED
+    constexpr int maxExtension = -3500;       //NOT FINALIZED
     constexpr double linearActuatorMax = 2100;
     constexpr double linearActuatorMin = 250;
 

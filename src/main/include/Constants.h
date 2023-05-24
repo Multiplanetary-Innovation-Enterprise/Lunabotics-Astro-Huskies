@@ -79,7 +79,7 @@ namespace EXCConstants {
     static const double linearActuatorForwardValue = 0.5;
     static const double linearActuatorRetractValue = 0;
 
-    static const double bucketSpinMotorSpeed = -0.3;
+    static const double bucketSpinMotorSpeed = -0.4;
 
     //Excavator Extension Positions
     constexpr int maxRetraction = 0;

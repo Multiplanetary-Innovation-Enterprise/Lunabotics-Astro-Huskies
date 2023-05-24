@@ -71,35 +71,41 @@ double EXC::getBucketSpeed() {
 }
 
 void EXC::extendRightScrew(double speed){
-    m_extendMotor1.Set(speed);
+    m_extendMotor2.Set(speed);
 }
 
 void EXC::setExtendVelocity(double speed) {
+    if(m_extendEncoder1.GetPosition() - m_extendEncoder2.GetPosition() < 25){
         if(speed > 0){
             if(m_extendEncoder1.GetPosition() >= m_extendEncoder2.GetPosition()){
-                m_extendMotor1.Set(speed*0.8);
+                m_extendMotor1.Set(speed*0.7);
                 m_extendMotor2.Set(speed);
                 
             }
             else if(m_extendEncoder1.GetPosition() <= m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed);
-                m_extendMotor2.Set(speed*0.8);
+                m_extendMotor2.Set(speed*0.7);
             }
         }   
         else if(speed < 0){
             if(m_extendEncoder1.GetPosition() <= m_extendEncoder2.GetPosition()){
-                m_extendMotor1.Set(speed*0.8);
+                m_extendMotor1.Set(speed*0.7);
                 m_extendMotor2.Set(speed);
             }
             else if(m_extendEncoder1.GetPosition() >= m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed);
-                m_extendMotor2.Set(speed*0.8);
+                m_extendMotor2.Set(speed*0.7);
             }
         } 
         else{
             m_extendMotor1.Set(0);
             m_extendMotor2.Set(0);
         }
+    }
+    else{
+        m_extendMotor1.Set(0);
+        m_extendMotor2.Set(0);
+    }
 }
 
 void EXC::setBucketSpeed(double speed) {
@@ -181,13 +187,16 @@ int EXC::autoExcavator() {
         }
         else if(state == 3){
             time(&time1); //GetTimePassed
-            if(time1 - time0 > 150){
+            if(time1 - time0 > 480){
                 state = 4;
                 EXC::setBucketSpeed(0);
                 Commandvar = 3;
             } 
             else{
-                EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+                if(((time1 - time0) % 3) == 1){
+                    EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+                } else {EXC::setBucketSpeed(0);}
+                
                 Commandvar = 2;
             }
         }

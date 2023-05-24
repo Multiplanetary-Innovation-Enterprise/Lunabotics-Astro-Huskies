@@ -32,20 +32,16 @@ void CAM::Periodic() {}
     string leftspeed = to_string(leftVelocity);
     cout<<"\n Speed  "<<leftspeed;
     if(leftVelocity > 0.05 || leftVelocity < -0.05){
-      m_driveMotor1.Set(leftVelocity);
-      m_driveMotor3.Set(leftVelocity);
-      string leftspeed = to_string(leftVelocity);
-      cout<<"\n Left Speed  "<<leftspeed;
+      m_driveMotor1.Set(leftVelocity*0.4);
+      m_driveMotor3.Set(leftVelocity*0.4);
     }
     else {
       m_driveMotor1.Set(0);
       m_driveMotor3.Set(0);
     }
     if(rightVelocity > 0.05 || rightVelocity < -0.05){
-      m_driveMotor2.Set(rightVelocity);
-      m_driveMotor4.Set(rightVelocity);
-      string rightspeed = to_string(rightVelocity);
-      cout<<"\n Right Speed  "<<rightspeed;
+      m_driveMotor2.Set(rightVelocity*0.4);
+      m_driveMotor4.Set(rightVelocity*0.4);
     }
     else {
       m_driveMotor2.Set(0);
@@ -66,9 +62,9 @@ void CAM::autoChassis(int Commandvar) {
     time(&time3);
 
     if(((time3 - time2) % 3) == 1) {
-      string timer = to_string(((time3 - time2) % 3) == 1);
+      string timer = to_string(((time3 - time2) % 4) == 1);
       cout<<"\nCAM time  "<<timer;
-      CAM::setVelocity(-0.1, 0.1);
+      CAM::setVelocity(-0.6, 0.6);
     } 
     else {
       CAM::setVelocity(0,0);

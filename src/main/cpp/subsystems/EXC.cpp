@@ -14,6 +14,7 @@
 using namespace std;
 time_t time0;
 time_t time1;
+time_t time05;
 
 int state = 0;
 int isAuto = 0;
@@ -181,7 +182,9 @@ int EXC::autoExcavator() {
             }
             else{
             EXC::setExtendVelocity(EXCConstants::extendVelocity);
-            EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+            if(((time05 - time0) % 3) == 1){
+                EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+            } else {EXC::setBucketSpeed(0);}
             Commandvar = 1;
             }
         }

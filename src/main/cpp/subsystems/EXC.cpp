@@ -182,6 +182,7 @@ int EXC::autoExcavator() {
             }
             else{
             EXC::setExtendVelocity(EXCConstants::extendVelocity);
+            time(&time05);
             if(((time05 - time0) % 3) == 1){
                 EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
             } else {EXC::setBucketSpeed(0);}

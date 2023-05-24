@@ -7,6 +7,9 @@
 #include <iostream>
 #include <string.h>
 using namespace std;
+
+time_t time4;
+time_t time5;
 double adjustedBeltVelocity = (HOPConstants::beltVelocity);
 HOP::HOP(): 
     m_beltMotor{HOPConstants::beltMotorID, rev::CANSparkMax::MotorType::kBrushless},
@@ -104,9 +107,13 @@ void HOP::autoHopper(int Commandvar){
     // 5 -> CAM and HOP off
     if(Commandvar == 1) {
         HOP::setFlipTumble();
+        time(&time4);
     }
     else if(Commandvar == 2) {
-        HOP::SetBeltVelocity(HOPConstants::beltVelocity);
+        time(&time5);
+            if(((time5 - time4) % 3) == 1){
+                HOP::SetBeltVelocity(HOPConstants::beltVelocity);
+            } else {HOP::SetBeltVelocity(0);}
     }
     else if(Commandvar == 3) {
         HOP::SetBeltVelocity(0);

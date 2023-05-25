@@ -9,6 +9,7 @@
 using namespace std;
 time_t time2;
 time_t time3;
+double startPosition;
 CAM::CAM() : 
 
 m_driveMotor1{CAMConstants::driveMotor1ID, rev::CANSparkMax::MotorType::kBrushless},
@@ -29,8 +30,7 @@ void CAM::Periodic() {}
 // The function continullay runs and reads the joystick value
 
   void CAM::setVelocity(double leftVelocity, double rightVelocity) {
-    string leftspeed = to_string(leftVelocity);
-    cout<<"\n Speed  "<<leftspeed;
+    
     if(leftVelocity > 0.05 || leftVelocity < -0.05){
       m_driveMotor1.Set(leftVelocity*0.4);
       m_driveMotor3.Set(leftVelocity*0.4);
@@ -48,33 +48,67 @@ void CAM::Periodic() {}
       m_driveMotor4.Set(0);
     }
 }
-void CAM::autoChassis(int Commandvar) {
-    // 0 -> Don't do anything
-    // 1 -> Set Flipper to Tumble
-    // 2 -> Drive Belt & CAM
-    // 3 -> Turn off Belt & CAM
-    // 4 -> Set Flipper to Dump
-    // 5 -> CAM and HOP off
-  if (Commandvar == 1) {
-    time(&time2);
-  }
-  if (Commandvar == 2) {
-    time(&time3);
 
-    if(((time3 - time2) % 3) == 1) {
-      string timer = to_string(((time3 - time2) % 4) == 1);
-      cout<<"\nCAM time  "<<timer;
-      CAM::setVelocity(-0.6, 0.6);
-    } 
+  double CAM::getCAMPosition() {
+    if ( 
+      m_driveMotor1Encoder.GetPosition() < -m_driveMotor2Encoder.GetPosition() && 
+      m_driveMotor1Encoder.GetPosition() < m_driveMotor3Encoder.GetPosition() &&
+      m_driveMotor1Encoder.GetPosition() < -m_driveMotor4Encoder.GetPosition()) {
+        return m_driveMotor1Encoder.GetPosition();
+      }
+    else if (
+      -m_driveMotor2Encoder.GetPosition() < m_driveMotor1Encoder.GetPosition() && 
+      -m_driveMotor2Encoder.GetPosition() < m_driveMotor3Encoder.GetPosition() &&
+      -m_driveMotor2Encoder.GetPosition() < -m_driveMotor4Encoder.GetPosition()) {
+        return -m_driveMotor2Encoder.GetPosition();
+      }
+    else if (
+      m_driveMotor3Encoder.GetPosition() < m_driveMotor1Encoder.GetPosition() && 
+      m_driveMotor3Encoder.GetPosition() < -m_driveMotor2Encoder.GetPosition() &&
+      m_driveMotor3Encoder.GetPosition() < -m_driveMotor4Encoder.GetPosition()) {
+        return m_driveMotor3Encoder.GetPosition();
+      }
+    else if (
+      -m_driveMotor4Encoder.GetPosition() < m_driveMotor1Encoder.GetPosition() && 
+      -m_driveMotor4Encoder.GetPosition() < -m_driveMotor2Encoder.GetPosition() &&
+      -m_driveMotor4Encoder.GetPosition() < m_driveMotor3Encoder.GetPosition()) {
+        return -m_driveMotor4Encoder.GetPosition();
+      }
     else {
-      CAM::setVelocity(0,0);
-      cout<<"\nCAM off";
+      return m_driveMotor1Encoder.GetPosition();
     }
   }
-  else if(Commandvar == 3) {
-    CAM::setVelocity(0,0);
+
+  int CAM::autoChassis(int Commandvar) {
+    if(Commandvar == 1) {
+      
+      if((CAM::getCAMPosition() - startPosition) <= CAMConstants::excavationZone){
+        m_driveMotor2.Set(-0.06); //Right Motors
+        m_driveMotor4.Set(-0.06); //Right Motors
+
+        m_driveMotor1.Set(0.06);  //Left Motors
+        m_driveMotor3.Set(0.06);  //Left Motors
+        return 2;
+        string encorderPos = to_string(CAM::getCAMPosition());
+        cout<<"\nNot in EXC Zone,     Encoder Positon: "<<encorderPos;
+      }
+      else {
+        m_driveMotor2.Set(0); //Right Motors
+        m_driveMotor4.Set(0); //Right Motors
+
+        m_driveMotor1.Set(0);  //Left Motors
+        m_driveMotor3.Set(0);  //Left Motors
+        return 1;
+        string encorderPos = to_string(CAM::getCAMPosition());
+        cout<<"\nIn EXC Zone,     Encoder Positon: "<<encorderPos;
+      }
+    }
+    else{
+        m_driveMotor2.Set(0); //Right Motors
+        m_driveMotor4.Set(0); //Right Motors
+
+        m_driveMotor1.Set(0);  //Left Motors
+        m_driveMotor3.Set(0);  //Left Motors
+        return 2;
+    }
   }
-  else if(Commandvar == 5) {
-    CAM::setVelocity(0,0);
-  }
-}

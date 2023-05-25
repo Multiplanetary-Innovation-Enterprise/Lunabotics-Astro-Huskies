@@ -25,20 +25,35 @@ RobotContainer::RobotContainer() {
     cout<<"\nEXC Linear Actuator Position  "<<EXClinearActuator;
     cout<<"\nHOP Flipper Position  "<<HOPFlip;    
     
-    
-    m_CAM.SetDefaultCommand(frc2::cmd::Run(
-      [this] {
-        m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(),
-                            m_driverControllerDriver.GetRightY());
-      },
-      {&m_CAM}));
+    //////////////////////////////////////////////////////// MAIN DRIVER CONTROLS HOPPER ////////////////////////////////////////////////////////////////
+    m_driverControllerDriver.RightTrigger()
+    .WhileTrue(frc2::cmd::Run([this] {
+      m_CAM.setVelocity(-m_driverControllerDriver.GetLeftY(), m_driverControllerDriver.GetRightY());
+      },{&m_CAM}))
+    .OnFalse(frc2::cmd::Run([this] {
+      m_CAM.setVelocity(0, 0);
+      },{&m_CAM}));
+
+      m_driverControllerDriver.LeftTrigger()
+    .WhileTrue(frc2::cmd::Run([this] {
+      m_CAM.setVelocity(m_driverControllerDriver.GetLeftY(), -m_driverControllerDriver.GetRightY());
+      },{&m_CAM}))
+    .OnFalse(frc2::cmd::Run([this] {
+      m_CAM.setVelocity(0, 0);
+      },{&m_CAM}));
 
 }
 
 void RobotContainer::ConfigureBindings() {
-  // EXC Bndings
-  // Spin Buckets
 
+  //////////////////////////////////////////////////////// CO-DRIVER CONTROLS ////////////////////////////////////////////////////////////////
+  /*
+  A -> SPIN BUCKETS FORWARD
+  B -> SPIN BUCKETS BACKWARD
+  X -> EXTEND RIGHT ACME SCREW
+  Y -> RETRACT RIGHT ACME SCREW
+  */
+  
   m_driverControllerCoDriver.A()
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.setBucketSpeed(0);}, {&m_EXC}));
@@ -68,33 +83,53 @@ void RobotContainer::ConfigureBindings() {
   .OnTrue(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(-EXCConstants::extendVelocity);}, {&m_EXC}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_EXC.extendRightScrew(0);}, {&m_EXC}));
   
-  m_driverControllerDriver.RightBumper()
+  //////////////////////////////////////////////////////// AUTONOMOUS CONTROLS /////////////////////////////////////////////////////////////////
+  m_driverControllerAuto.A()
+  .WhileTrue(frc2::cmd::Run([this] {
+    int EXCok = m_CAM.autoChassis(1);
+    m_EXC.autoEXCState(EXCok); 
+    int CommandVAR = m_EXC.autoExcavator(); 
+    //m_HOP.autoHopper(CommandVAR);
+    }, {&m_EXC}))
+  .OnFalse(frc2::cmd::Run([this] {
+    int EXCok = m_CAM.autoChassis(1);
+    int CommandVAR = m_EXC.autoExcavator(); 
+    //m_HOP.autoHopper(CommandVAR);
+    }, {&m_EXC}));
+
+  m_driverControllerAuto.B()
+  .WhileTrue(frc2::cmd::RunOnce([this] {
+    int EXCok = m_CAM.autoChassis(2);
+    m_EXC.autoEXCState(2); 
+    int CommandVAR = m_EXC.autoExcavator();
+    //m_HOP.autoHopper(CommandVAR);
+    }, {&m_EXC}));
+
+      m_driverControllerAuto.X()
   .WhileTrue(frc2::cmd::Run([this] {
     m_EXC.autoEXCState(1); 
     int CommandVAR = m_EXC.autoExcavator(); 
-    m_HOP.autoHopper(CommandVAR);
-    m_CAM.autoChassis(CommandVAR);
+    //m_HOP.autoHopper(CommandVAR);
     }, {&m_EXC}))
   .OnFalse(frc2::cmd::Run([this] {
     int CommandVAR = m_EXC.autoExcavator(); 
-    m_HOP.autoHopper(CommandVAR);
-    //m_CAM.autoChassis(CommandVAR);
+    //m_HOP.autoHopper(CommandVAR);
     }, {&m_EXC}));
 
-  m_driverControllerDriver.LeftBumper()
+  m_driverControllerAuto.Y()
   .WhileTrue(frc2::cmd::RunOnce([this] {
     m_EXC.autoEXCState(2); 
     int CommandVAR = m_EXC.autoExcavator();
-    m_HOP.autoHopper(CommandVAR);
-    //m_CAM.autoChassis(CommandVAR);
+    //m_HOP.autoHopper(CommandVAR);
     }, {&m_EXC}));
 
+  //////////////////////////////////////////////////////// MAIN DRIVER CONTROLS HOPPER ////////////////////////////////////////////////////////////////
   //HOP Bindings
-  m_driverControllerDriver.RightTrigger()
-  .OnTrue(frc2::cmd::RunOnce([this] { speedAdjust = m_HOP.HopperSpeed(2); }, {&m_HOP}))
+  /*m_driverControllerDriver.RightBumper()
+  .OnTrue(frc2::cmd::Run([this] { speedAdjust = m_HOP.HopperSpeed(2); }, {&m_HOP}))
   .OnFalse(frc2::cmd::Run([this] { speedAdjust = m_HOP.HopperSpeed(0); }, {&m_HOP}));
-  m_driverControllerDriver.LeftTrigger()
-  .OnTrue(frc2::cmd::RunOnce([this] { speedAdjust = m_HOP.HopperSpeed(1); }, {&m_HOP}))
+  m_driverControllerDriver.LeftBumper()
+  .OnTrue(frc2::cmd::Run([this] { speedAdjust = m_HOP.HopperSpeed(1); }, {&m_HOP}))
   .OnFalse(frc2::cmd::Run([this] { speedAdjust = m_HOP.HopperSpeed(0); }, {&m_HOP}));
   m_driverControllerDriver.B()
   .WhileTrue(frc2::cmd::Run([this] {m_HOP.setFlipStow();}, {&m_HOP}))
@@ -106,31 +141,10 @@ void RobotContainer::ConfigureBindings() {
   .WhileTrue(frc2::cmd::Run([this] {m_HOP.setFlipTumble();}, {&m_HOP}))
   .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetFlipVelocity(0);}, {&m_HOP}));
   m_driverControllerDriver.A()
-  .WhileTrue(frc2::cmd::Run([this] {m_HOP.SetBeltVelocity(HOPConstants::beltVelocity);}, {&m_HOP}))
-  .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetBeltVelocity(0);}, {&m_HOP}));
-
-  //CAM Bindings
- //m_driverControllerDriver.POVUp().
-
-  (m_driverControllerDriver.RightTrigger() && m_driverControllerDriver.LeftTrigger() && m_driverControllerDriver.LeftStick())
-  .OnTrue(frc2::cmd::RunOnce([this]{m_CAM.setVelocity(-0.1, 0);}, {&m_CAM} ));
-  (m_driverControllerDriver.RightTrigger() && m_driverControllerDriver.RightTrigger() && m_driverControllerDriver.LeftStick())
-  .OnTrue(frc2::cmd::RunOnce([this]{m_CAM.setVelocity(0, -0.1);}, {&m_CAM} ));
-
-  m_driverControllerDriver.LeftStick().OnTrue(frc2::cmd::RunOnce([this]
-     {m_CAM.setVelocity(0.1, 0);}, {&m_CAM} ));
-
-  m_driverControllerDriver.RightStick().OnTrue(frc2::cmd::RunOnce([this]
-     {m_CAM.setVelocity(0, 0.1);}, {&m_CAM}));
+  .WhileTrue(frc2::cmd::Run([this] {m_HOP.SetBeltVelocity(speedAdjust);}, {&m_HOP}))
+  .OnFalse(frc2::cmd::RunOnce([this] {m_HOP.SetBeltVelocity(0);}, {&m_HOP}));*/
 
 }
-
-  // Schedule `ExampleMethodCommand` when the Xbox controller's B button is
-  // pressed, cancelling on release.
-  // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-  
-
-
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   // An example command will be run in autonomous

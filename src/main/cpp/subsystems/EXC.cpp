@@ -10,6 +10,7 @@
 #include "subsystems/HOP.h"
 #include "subsystems/CAM.h"
 #include <string.h>
+#include <math.h>
 
 using namespace std;
 time_t time0;
@@ -72,11 +73,15 @@ double EXC::getBucketSpeed() {
 }
 
 void EXC::extendRightScrew(double speed){
-    m_extendMotor2.Set(speed);
+    m_extendMotor1.Set(speed);
+    string rightScrew = to_string(m_extendEncoder1.GetPosition());
+    cout<<"\nRight Screw Encoder Value "<<rightScrew;
+    string leftScrew = to_string(m_extendEncoder2.GetPosition());
+    cout<<"\nLeftt Screw Encoder Value "<<leftScrew;
 }
 
 void EXC::setExtendVelocity(double speed) {
-    if(m_extendEncoder1.GetPosition() - m_extendEncoder2.GetPosition() < 25){
+    if(abs(m_extendEncoder1.GetPosition()) - abs(m_extendEncoder2.GetPosition()) < 130){
         if(speed > 0){
             if(m_extendEncoder1.GetPosition() >= m_extendEncoder2.GetPosition()){
                 m_extendMotor1.Set(speed*0.7);
@@ -101,11 +106,19 @@ void EXC::setExtendVelocity(double speed) {
         else{
             m_extendMotor1.Set(0);
             m_extendMotor2.Set(0);
+            string rightScrew = to_string(m_extendEncoder1.GetPosition());
+            cout<<"\nRight Screw Encoder Value "<<rightScrew;
+            string leftScrew = to_string(m_extendEncoder2.GetPosition());
+            cout<<"\nLeftt Screw Encoder Value "<<leftScrew;
         }
     }
     else{
         m_extendMotor1.Set(0);
         m_extendMotor2.Set(0);
+        string rightScrew = to_string(m_extendEncoder1.GetPosition());
+        cout<<"\nRight Screw Encoder Value "<<rightScrew;
+        string leftScrew = to_string(m_extendEncoder2.GetPosition());
+        cout<<"\nLeftt Screw Encoder Value "<<leftScrew;
     }
 }
 
@@ -160,7 +173,7 @@ int EXC::autoExcavator() {
         //state = 0 ->initialize
         //state = 1 ->deploy
         //state = 2 ->extend & dig
-        //state = 3 ->dig & drive
+        //state = 3 ->dig & drive //NOT IN USE
         //state = 4 ->retract & dig
         //state = 5 ->stow
         //state = 6 ->shutdown
@@ -169,41 +182,50 @@ int EXC::autoExcavator() {
             state = 1;
             time(&time0); //GetCurrentTime
         }
+        
         else if (state == 1){
             if(EXC::getLinearActuatorPosition() >= EXCConstants::linearActuatorMax) {
                 state = 2;
                 EXC::setLinearActuatorspeed(0);
-            } else{EXC::deployExcavator();}
+            } else{
+                EXC::deployExcavator();
+                Commandvar = 1;
+            }
         }
+        
         else if(state == 2){
             if(EXC::getExcavatorDepth() < EXCConstants::maxExtension){
-                state = 3;
+                state = 4;
                 EXC::setExtendVelocity(0);
+                EXC::setBucketSpeed(0);
             }
             else{
-            EXC::setExtendVelocity(EXCConstants::extendVelocity);
-            time(&time05);
-            if(((time05 - time0) % 3) == 1){
                 EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
-            } else {EXC::setBucketSpeed(0);}
-            Commandvar = 1;
+                Commandvar = 2;
+                time(&time05);
+            if(((time05 - time0) % 3) == 1){
+                EXC::setExtendVelocity(EXCConstants::extendVelocity);
+            } else {EXC::setExtendVelocity(0);}
+            
             }
         }
+        
         else if(state == 3){
             time(&time1); //GetTimePassed
-            if(time1 - time0 > 480){
+            if(time1 - time0 > 300){
+                string timePassed = to_string(time1 - time0);
+                cout<<"\nTime "<<timePassed;
                 state = 4;
                 EXC::setBucketSpeed(0);
                 Commandvar = 3;
             } 
             else{
-                if(((time1 - time0) % 3) == 1){
-                    EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
-                } else {EXC::setBucketSpeed(0);}
+                 EXC::setBucketSpeed(EXCConstants::bucketSpinMotorSpeed);
+                } 
                 
                 Commandvar = 2;
             }
-        }
+        
         else if(state == 4){
             if(EXC::getExcavatorDepth() > EXCConstants::maxRetraction){
                 state = 5;
@@ -215,12 +237,14 @@ int EXC::autoExcavator() {
                 Commandvar = 4;
             }
         }
+        
         else if(state == 5){
             if(EXC::getLinearActuatorPosition() <= EXCConstants::linearActuatorMin) {
                 state = 6;
                 EXC::setLinearActuatorspeed(0);
             } else{EXC::stowExcavator();}
         }
+        
         else if(state == 6){
             EXC::setBucketSpeed(0);
             EXC::setExtendVelocity(0);
@@ -231,14 +255,15 @@ int EXC::autoExcavator() {
         }
         
     }
-    else if(autostate == 2) {
+    else if(autostate == 2) {               // PAUSE AUTONOMY
         EXC::setBucketSpeed(0);
         EXC::setExtendVelocity(0);
         EXC::setLinearActuatorspeed(0);
         isAuto = 0;
         Commandvar = 5;
     }
-    else{
+    
+    else{                                   // END AUTONOMY
         EXC::setBucketSpeed(0);
         EXC::setExtendVelocity(0);
         EXC::setLinearActuatorspeed(0);
@@ -246,5 +271,6 @@ int EXC::autoExcavator() {
         isAuto = 0; 
 
     }
-    return Commandvar;
+    
+    return Commandvar;                      // RETURNS INDICATOR FOR HOPPER
 }

@@ -32,6 +32,8 @@ class RobotContainer {
       OperatorConstants::kDriverControllerPort};
   frc2::CommandXboxController m_driverControllerCoDriver{
       OperatorConstants::jDriverControllerPort};
+  frc2::CommandXboxController m_driverControllerAuto{
+      OperatorConstants::iDriverControllerPort};
 
   // The robot's subsystems are defined here...
   // ExampleSubsystem m_subsystem;

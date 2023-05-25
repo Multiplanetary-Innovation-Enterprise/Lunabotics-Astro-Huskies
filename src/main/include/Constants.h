@@ -21,7 +21,7 @@ namespace OperatorConstants {
 
 constexpr int kDriverControllerPort = 0;
 constexpr int jDriverControllerPort = 1;
-
+constexpr int iDriverControllerPort = 2;
 }  // namespace OperatorConstants
 
 namespace CAMConstants {
@@ -34,6 +34,8 @@ namespace CAMConstants {
     //Chassis auto speed
     constexpr int leftSpeed = 0.1;
     constexpr int rightSpeed = -0.1;
+
+    constexpr int excavationZone = 246;   // 
     
 }
 
@@ -47,11 +49,11 @@ namespace HOPConstants {
     constexpr double flipVelocity = 0.2;
 
     //Flipper Rotation Positions
-    constexpr int stowPositionMin = -3;         // NOT FINALISED
-    constexpr int stowPositionMax = 3;
-    constexpr int dumpPositionMin = -95;        // NOT FINALISED
+    constexpr int stowPositionMin = -3; 
+    constexpr int stowPositionMax = 5; 
+    constexpr int dumpPositionMin = -95;       
     constexpr int dumpPositionMax = -85;
-    constexpr int tumblePositionMin = -140;     // NOT FINALISED
+    constexpr int tumblePositionMin = -140;     
     constexpr int tumblePositionMax = -130;
 }
 
@@ -61,10 +63,6 @@ namespace EXCConstants {
     static const int linearActuatorID2_dir = 3;
     static const int linearActuatorID_speed = 0;
     static const int linearActuatorID_speed2 = 2;
-
-    //Analog ports
-    //static const int linearActuatorID1Pot = 1;
-    //static const int linearActuatorID2Pot = 2;
     
     //CAM IDs
     constexpr int extendMotor1ID = 24;
@@ -83,7 +81,7 @@ namespace EXCConstants {
 
     //Excavator Extension Positions
     constexpr int maxRetraction = 0;
-    constexpr int maxExtension = -3500;       //NOT FINALIZED
+    constexpr int maxExtension = -3050;  
     constexpr double linearActuatorMax = 2100;
     constexpr double linearActuatorMin = 250;
 

@@ -81,19 +81,19 @@ void HOP::setFlipTumble() {
 double HOP::HopperSpeed(int speedAdjust) {
     
     if(speedAdjust == 1) {
-        adjustedBeltVelocity = adjustedBeltVelocity -.02;
+        adjustedBeltVelocity = adjustedBeltVelocity -.01;
         string beltSpeed = to_string(adjustedBeltVelocity);
-        cout<<"\nHOP Belt Speed Up %d"<<beltSpeed;
+        cout<<"\nHOP Belt Speed Up "<<beltSpeed;
     }
     else if(speedAdjust == 2) {
-        adjustedBeltVelocity =adjustedBeltVelocity + .02;
+        adjustedBeltVelocity =adjustedBeltVelocity + .01;
         string beltSpeed = to_string(adjustedBeltVelocity);
-        cout<<"\nHOP Belt Speed Low %d"<<beltSpeed;
+        cout<<"\nHOP Belt Speed Low "<<beltSpeed;
     }
     else {
         adjustedBeltVelocity =adjustedBeltVelocity;
         string beltSpeed = to_string(adjustedBeltVelocity);
-        cout<<"\nHOP Belt Speed Same %d"<<beltSpeed;
+        cout<<"\nHOP Belt Speed Same "<<beltSpeed;
     }
     return adjustedBeltVelocity;
 }

@@ -74,10 +74,10 @@ double EXC::getBucketSpeed() {
 
 void EXC::extendRightScrew(double speed){
     m_extendMotor1.Set(speed);
-    string rightScrew = to_string(m_extendEncoder1.GetPosition());
+    /*string rightScrew = to_string(m_extendEncoder1.GetPosition());
     cout<<"\nRight Screw Encoder Value "<<rightScrew;
     string leftScrew = to_string(m_extendEncoder2.GetPosition());
-    cout<<"\nLeftt Screw Encoder Value "<<leftScrew;
+    cout<<"\nLeftt Screw Encoder Value "<<leftScrew;*/
 }
 
 void EXC::setExtendVelocity(double speed) {

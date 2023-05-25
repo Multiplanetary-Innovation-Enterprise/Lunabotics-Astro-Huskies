@@ -80,9 +80,12 @@ void CAM::Periodic() {}
   }
 
   int CAM::autoChassis(int Commandvar) {
+    if(Commandvar == 0) {
+      time(&time2);
+    }
     if(Commandvar == 1) {
-      
-      if((CAM::getCAMPosition() - startPosition) <= CAMConstants::excavationZone){
+      time(&time3);
+      if(time3 - time2 < 39){
         m_driveMotor2.Set(-0.06); //Right Motors
         m_driveMotor4.Set(-0.06); //Right Motors
 

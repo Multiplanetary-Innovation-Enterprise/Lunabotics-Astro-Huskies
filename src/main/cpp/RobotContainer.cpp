@@ -86,7 +86,7 @@ void RobotContainer::ConfigureBindings() {
   //////////////////////////////////////////////////////// AUTONOMOUS CONTROLS /////////////////////////////////////////////////////////////////
   m_driverControllerAuto.A()
   .WhileTrue(frc2::cmd::Run([this] {
-    int EXCok = m_CAM.autoChassis(1);
+    int EXCok = m_CAM.autoChassis(0);
     m_EXC.autoEXCState(EXCok); 
     int CommandVAR = m_EXC.autoExcavator(); 
     //m_HOP.autoHopper(CommandVAR);

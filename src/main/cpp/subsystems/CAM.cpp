@@ -88,9 +88,9 @@ void CAM::Periodic() {}
 
         m_driveMotor1.Set(0.06);  //Left Motors
         m_driveMotor3.Set(0.06);  //Left Motors
-        return 2;
         string encorderPos = to_string(CAM::getCAMPosition());
         cout<<"\nNot in EXC Zone,     Encoder Positon: "<<encorderPos;
+        return 0;
       }
       else {
         m_driveMotor2.Set(0); //Right Motors
@@ -98,9 +98,9 @@ void CAM::Periodic() {}
 
         m_driveMotor1.Set(0);  //Left Motors
         m_driveMotor3.Set(0);  //Left Motors
-        return 1;
         string encorderPos = to_string(CAM::getCAMPosition());
         cout<<"\nIn EXC Zone,     Encoder Positon: "<<encorderPos;
+        return 1;
       }
     }
     else{
